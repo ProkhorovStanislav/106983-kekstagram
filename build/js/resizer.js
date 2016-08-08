@@ -159,35 +159,34 @@
 
     // Отрисовывание рамки из точек. Отдельный цикл для каждой стороны.
     getMyCanvas: function() {
-      var dotSize = 3;
+      var dotSize = 2;
       var borderElem = document.createElement('canvas');
-      var x = -this._resizeConstraint.side / 2;
-      var y = -this._resizeConstraint.side / 2 - dotSize;
+      //var m = -this._resizeConstraint.side / 2 - dotSize;
+      //var n = -this._resizeConstraint.side / 2 - dotSize * 3;
 
-      while (x < this._resizeConstraint.side / 2) {
-        this.drawDot(this._ctx, dotSize, x, y);
-        x += dotSize * 3;
-      }
+      this.drawBorder(this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize, -this._resizeConstraint.side / 2 - dotSize * 3, 'top');
+      this.drawBorder(this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize, -this._resizeConstraint.side / 2 - dotSize * 3, 'left');
+      this.drawBorder(this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize * 3, 'left');
+      this.drawBorder(this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, 'top');
+      //x = x - dotSize * 2;
 
-      x = x - dotSize;
-
-      while (y < this._resizeConstraint.side / 2 - dotSize) {
-        this.drawDot(this._ctx, dotSize, x, y);
-        y += dotSize * 3;
-      }
-
-      y = y - dotSize;
-
-      while (x > -this._resizeConstraint.side / 2) {
-        this.drawDot(this._ctx, dotSize, x, y);
-        x -= dotSize * 3;
-      }
-
-      x = x + 3;
-      while (y > -this._resizeConstraint.side / 2) {
-        this.drawDot(this._ctx, dotSize, x, y);
-        y -= dotSize * 3;
-      }
+      //while (y < this._resizeConstraint.side / 2 - dotSize) {
+      //  this.drawDot(this._ctx, dotSize, x, y);
+      //  y += dotSize * 3;
+      //}
+      //
+      //y = y - dotSize * 2;
+      //
+      //while (x > -this._resizeConstraint.side / 2 + dotSize) {
+      //  this.drawDot(this._ctx, dotSize, x, y);
+      //  x -= dotSize * 3;
+      //}
+      //
+      //x = x - dotSize * 2;
+      //while (y > -this._resizeConstraint.side / 2) {
+      //  this.drawDot(this._ctx, dotSize, x, y);
+      //  y -= dotSize * 3;
+      //}
 
       return borderElem;
     },
@@ -200,6 +199,37 @@
       this._ctx.arc(x, y, size, 0, Math.PI * 2, false);
       this._ctx.fillStyle = '#ffe753';
       this._ctx.fill();
+    },
+
+    drawBorder: function(m, n, x, y, i) {
+
+      if(i === 'top') {
+        while (x < m) {
+          this.drawDot(this._ctx, dotSize, x, y);
+          x += dotSize * 3;
+        }
+      }
+
+      if(i === 'left') {
+        while (y < n) {
+          this.drawDot(this._ctx, dotSize, x, y);
+          y += dotSize * 3;
+        }
+      }
+
+      //if(i === 'bottom') {
+      //  while (y < n) {
+      //    this.drawDot(this._ctx, dotSize, x, y);
+      //    y += dotSize * 3;
+      //  }
+      //}
+      //
+      //if(i === 'right') {
+      //  while (y < n) {
+      //    this.drawDot(this._ctx, dotSize, x, y);
+      //    y -= dotSize * 3;
+      //  }
+      //}
     },
     /**
      * Включение режима перемещения. Запоминается текущее положение курсора,
@@ -386,6 +416,8 @@
     this.x = x;
     this.y = y;
   };
+
+  var dotSize = 2;
 
   window.Resizer = Resizer;
 })();
