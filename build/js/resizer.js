@@ -114,13 +114,12 @@
 
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
-      this._ctx.strokeRect(
+      /*this._ctx.strokeRect(
           (-this._resizeConstraint.side / 2),
           (-this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2),
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);
+          this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
 
-      // Мой Код
       // Добавляем затенение области, выходящей за рамку изображения после кадрирования
       this._ctx.beginPath();
       // Отрисовка внутренней границы области, совпадающей с рамкой изображения после кадрирования
@@ -146,7 +145,8 @@
       this._ctx.font = '20px Arial';
       this._ctx.fillStyle = '#fff';
       this._ctx.fillText( this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 9);
-      //
+
+      document.body.appendChild(this.getMyCanvas());
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
       // и последующего изменения системы координат. Нужно для того, чтобы
@@ -155,6 +155,51 @@
       // некорректно сработает даже очистка холста или нужно будет использовать
       // сложные рассчеты для координат прямоугольника, который нужно очистить.
       this._ctx.restore();
+    },
+
+    // Отрисовывание рамки из точек. Отдельный цикл для каждой стороны.
+    getMyCanvas: function() {
+      var dotSize = 3;
+      var borderElem = document.createElement('canvas');
+      var x = -this._resizeConstraint.side / 2;
+      var y = -this._resizeConstraint.side / 2 - dotSize;
+
+      while (x < this._resizeConstraint.side / 2) {
+        this.drawDot(this._ctx, dotSize, x, y);
+        x += dotSize * 3;
+      }
+
+      x = x - dotSize;
+
+      while (y < this._resizeConstraint.side / 2 - dotSize) {
+        this.drawDot(this._ctx, dotSize, x, y);
+        y += dotSize * 3;
+      }
+
+      y = y - dotSize;
+
+      while (x > -this._resizeConstraint.side / 2) {
+        this.drawDot(this._ctx, dotSize, x, y);
+        x -= dotSize * 3;
+      }
+
+      x = x + 3;
+      while (y > -this._resizeConstraint.side / 2) {
+        this.drawDot(this._ctx, dotSize, x, y);
+        y -= dotSize * 3;
+      }
+
+      return borderElem;
+    },
+
+    /** Отрисовывание единичного кружка - элемента кастомной рамки,
+     * обозначающей область изображения после кадрирования. Координаты задаются от центра.
+     */
+    drawDot: function(ctx, size, x, y) {
+      this._ctx.beginPath();
+      this._ctx.arc(x, y, size, 0, Math.PI * 2, false);
+      this._ctx.fillStyle = '#ffe753';
+      this._ctx.fill();
     },
     /**
      * Включение режима перемещения. Запоминается текущее положение курсора,
