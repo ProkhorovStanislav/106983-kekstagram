@@ -115,8 +115,8 @@
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
       this._ctx.strokeRect(
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
-          (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2,
+          (-this._resizeConstraint.side / 2),
+          (-this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2),
           this._resizeConstraint.side - this._ctx.lineWidth / 2,
           this._resizeConstraint.side - this._ctx.lineWidth / 2);
 
@@ -124,17 +124,18 @@
       // Добавляем затенение области, выходящей за рамку изображения после кадрирования
       this._ctx.beginPath();
       // Отрисовка внутренней границы области, совпадающей с рамкой изображения после кадрирования
-      this._ctx.moveTo(-this._container.width * 0.75 / 2 - 6, -this._container.height * 0.75 / 2 - 6);
-      this._ctx.lineTo(this._container.width * 0.75 / 2 - 3, -this._container.height * 0.75 / 2 - 6);
-      this._ctx.lineTo(this._container.width * 0.75 / 2 - 3, this._container.height * 0.75 / 2 - 3);
-      this._ctx.lineTo(-this._container.width * 0.75 / 2 - 6, this._container.height * 0.75 / 2 - 3);
+      this._ctx.moveTo((-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth);
+      this._ctx.lineTo((this._resizeConstraint.side / 2), (-this._resizeConstraint.side / 2) - this._ctx.lineWidth);
+      this._ctx.lineTo((this._resizeConstraint.side / 2), (this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2);
+      this._ctx.lineTo((-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2, (this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2);
+      this._ctx.lineTo((-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2, (-this._resizeConstraint.side / 2) - this._ctx.lineWidth / 2);
 
       // Отрисовка внешней границы области, совпадающей с размерами загружаемого изображения
       this._ctx.moveTo(-this._container.width / 2, -this._container.height / 2);
       this._ctx.lineTo(this._container.width / 2, -this._container.height / 2);
-      this._ctx.lineTo(this._container.width / 2, this._container.width / 2);
-      this._ctx.lineTo(-this._container.height / 2, this._container.width / 2);
-      this._ctx.closePath();
+      this._ctx.lineTo(this._container.width / 2, this._container.height / 2);
+      this._ctx.lineTo(-this._container.width / 2, this._container.height / 2);
+      this._ctx.lineTo(-this._container.width / 2, -this._container.height / 2);
 
       // Задание параметров затеняющего слоя
       this._ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
@@ -144,8 +145,7 @@
       this._ctx.textAlign = 'center';
       this._ctx.font = '20px Arial';
       this._ctx.fillStyle = '#fff';
-      this._ctx.fillText( this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 15);
-
+      this._ctx.fillText( this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 9);
       //
 
       // Восстановление состояния канваса, которое было до вызова ctx.save
