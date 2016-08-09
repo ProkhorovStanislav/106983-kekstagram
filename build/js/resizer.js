@@ -157,15 +157,34 @@
       this._ctx.restore();
     },
 
-    // Отрисовывание рамки из точек. Отдельный цикл для каждой стороны.
+    // Отрисовывание рамки из точек. Для отрисовуи каждой стороны вызывается функция с соответствующими параметрами
     getMyCanvas: function() {
       var dotSize = 2;
       var borderElem = document.createElement('canvas');
 
-      this.drawBorder(-this._resizeConstraint.side / 2 - dotSize, -this._resizeConstraint.side / 2 - dotSize * 3, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize * 3, 'top');
-      this.drawBorder(-this._resizeConstraint.side / 2 - dotSize, -this._resizeConstraint.side / 2 - dotSize * 2, -this._resizeConstraint.side / 2 - dotSize, this._resizeConstraint.side / 2, 'left');
-      this.drawBorder(this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize * 2, this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, 'left');
-      this.drawBorder(-this._resizeConstraint.side / 2, this._resizeConstraint.side / 2 - dotSize * 2, this._resizeConstraint.side / 2, this._resizeConstraint.side / 2 - dotSize * 2, 'top');
+      this.drawBorder(
+          -this._resizeConstraint.side / 2 - dotSize,
+          -this._resizeConstraint.side / 2 - dotSize * 3,
+          this._resizeConstraint.side / 2,
+          -this._resizeConstraint.side / 2 - dotSize * 3);
+
+      this.drawBorder(
+          -this._resizeConstraint.side / 2 - dotSize,
+          -this._resizeConstraint.side / 2 - dotSize * 2,
+          -this._resizeConstraint.side / 2 - dotSize,
+          this._resizeConstraint.side / 2);
+
+      this.drawBorder(
+          this._resizeConstraint.side / 2,
+          -this._resizeConstraint.side / 2 - dotSize * 2,
+          this._resizeConstraint.side / 2,
+          this._resizeConstraint.side / 2);
+
+      this.drawBorder(
+          -this._resizeConstraint.side / 2,
+          this._resizeConstraint.side / 2 - dotSize * 2,
+          this._resizeConstraint.side / 2,
+          this._resizeConstraint.side / 2 - dotSize * 2);
 
       return borderElem;
     },
@@ -190,14 +209,14 @@
      */
     drawBorder: function(x, y, m, n) {
 
-      if(y === n) {
+      if (y === n) {
         while (x < m) {
           this.drawDot(this._ctx, dotSize, x, y);
           x += dotSize * 3;
         }
       }
 
-      if(x === m) {
+      if (x === m) {
         while (y < n) {
           this.drawDot(this._ctx, dotSize, x, y);
           y += dotSize * 3;
