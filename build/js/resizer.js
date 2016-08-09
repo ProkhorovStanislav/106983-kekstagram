@@ -159,32 +159,36 @@
 
     // Отрисовывание рамки из точек. Для отрисовки каждой стороны вызывается функция с соответствующими параметрами
     getMyCanvas: function() {
-      var dotSize = 2;
       var borderElem = document.createElement('canvas');
+      var dotSize = 2;
 
       this.drawBorder(
           -this._resizeConstraint.side / 2 - dotSize,
           -this._resizeConstraint.side / 2 - dotSize * 3,
           this._resizeConstraint.side / 2,
-          -this._resizeConstraint.side / 2 - dotSize * 3);
+          -this._resizeConstraint.side / 2 - dotSize * 3,
+          dotSize);
 
       this.drawBorder(
           -this._resizeConstraint.side / 2 - dotSize,
           -this._resizeConstraint.side / 2 - dotSize * 2,
           -this._resizeConstraint.side / 2 - dotSize,
-          this._resizeConstraint.side / 2);
+          this._resizeConstraint.side / 2,
+          dotSize);
 
       this.drawBorder(
           this._resizeConstraint.side / 2,
           -this._resizeConstraint.side / 2 - dotSize * 2,
           this._resizeConstraint.side / 2,
-          this._resizeConstraint.side / 2);
+          this._resizeConstraint.side / 2,
+          dotSize);
 
       this.drawBorder(
           -this._resizeConstraint.side / 2,
           this._resizeConstraint.side / 2 - dotSize * 2,
           this._resizeConstraint.side / 2,
-          this._resizeConstraint.side / 2 - dotSize * 2);
+          this._resizeConstraint.side / 2 - dotSize * 2,
+          dotSize);
 
       return borderElem;
     },
@@ -205,11 +209,13 @@
      * @param y - начальная координата линии по оси Y
      * @param m - конечная координата линии по оси X
      * @param n - конечная координата линии по оси Y
+     * @param dotSize - радиус точки, элемента рамки
      * Сравнивая переданные параметры попарно, функция рисует либо горизонтальную либо вертикальную сторону рамки
      */
-    drawBorder: function(x, y, m, n) {
+    drawBorder: function(x, y, m, n, dotSize) {
       if (x !== m && y !== n || x === m && y === n || x > m || y > n) {
         console.log('the parameters passed to the function are incorrect');
+        return;
       }
 
       if (y === n) {
@@ -412,8 +418,6 @@
     this.x = x;
     this.y = y;
   };
-
-  var dotSize = 2;
 
   window.Resizer = Resizer;
 })();
