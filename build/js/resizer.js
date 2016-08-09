@@ -157,7 +157,7 @@
       this._ctx.restore();
     },
 
-    // Отрисовывание рамки из точек. Для отрисовуи каждой стороны вызывается функция с соответствующими параметрами
+    // Отрисовывание рамки из точек. Для отрисовки каждой стороны вызывается функция с соответствующими параметрами
     getMyCanvas: function() {
       var dotSize = 2;
       var borderElem = document.createElement('canvas');
@@ -208,6 +208,9 @@
      * Сравнивая переданные параметры попарно, функция рисует либо горизонтальную либо вертикальную сторону рамки
      */
     drawBorder: function(x, y, m, n) {
+      if (x !== m && y !== n || x === m && y === n || x > m || y > n) {
+        console.log('the parameters passed to the function are incorrect');
+      }
 
       if (y === n) {
         while (x < m) {
