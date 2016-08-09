@@ -161,38 +161,17 @@
     getMyCanvas: function() {
       var dotSize = 2;
       var borderElem = document.createElement('canvas');
-      //var m = -this._resizeConstraint.side / 2 - dotSize;
-      //var n = -this._resizeConstraint.side / 2 - dotSize * 3;
 
-      this.drawBorder(this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize, -this._resizeConstraint.side / 2 - dotSize * 3, 'top');
-      this.drawBorder(this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize, -this._resizeConstraint.side / 2 - dotSize * 3, 'left');
-      this.drawBorder(this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize * 3, 'left');
-      this.drawBorder(this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, 'top');
-      //x = x - dotSize * 2;
-
-      //while (y < this._resizeConstraint.side / 2 - dotSize) {
-      //  this.drawDot(this._ctx, dotSize, x, y);
-      //  y += dotSize * 3;
-      //}
-      //
-      //y = y - dotSize * 2;
-      //
-      //while (x > -this._resizeConstraint.side / 2 + dotSize) {
-      //  this.drawDot(this._ctx, dotSize, x, y);
-      //  x -= dotSize * 3;
-      //}
-      //
-      //x = x - dotSize * 2;
-      //while (y > -this._resizeConstraint.side / 2) {
-      //  this.drawDot(this._ctx, dotSize, x, y);
-      //  y -= dotSize * 3;
-      //}
+      this.drawBorder(-this._resizeConstraint.side / 2 - dotSize, -this._resizeConstraint.side / 2 - dotSize * 3, this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize * 3, 'top');
+      this.drawBorder(-this._resizeConstraint.side / 2 - dotSize, -this._resizeConstraint.side / 2 - dotSize * 2, -this._resizeConstraint.side / 2 - dotSize, this._resizeConstraint.side / 2, 'left');
+      this.drawBorder(this._resizeConstraint.side / 2, -this._resizeConstraint.side / 2 - dotSize * 2, this._resizeConstraint.side / 2, this._resizeConstraint.side / 2, 'left');
+      this.drawBorder(-this._resizeConstraint.side / 2, this._resizeConstraint.side / 2 - dotSize * 2, this._resizeConstraint.side / 2, this._resizeConstraint.side / 2 - dotSize * 2, 'top');
 
       return borderElem;
     },
 
-    /** Отрисовывание единичного кружка - элемента кастомной рамки,
-     * обозначающей область изображения после кадрирования. Координаты задаются от центра.
+    /**
+     * Отрисовывание единичного кружка - элемента кастомной рамки, обозначающей область изображения после кадрирования. Координаты задаются от центра.
      */
     drawDot: function(ctx, size, x, y) {
       this._ctx.beginPath();
@@ -201,36 +180,31 @@
       this._ctx.fill();
     },
 
-    drawBorder: function(m, n, x, y, i) {
+    /**
+     * Функция отрисовки рамки получает 4 параметра
+     * @param x - начальная координата линии по оси X
+     * @param y - начальная координата линии по оси Y
+     * @param m - конечная координата линии по оси X
+     * @param n - конечная координата линии по оси Y
+     * Сравнивая переданные параметры попарно, функция рисует либо горизонтальную либо вертикальную сторону рамки
+     */
+    drawBorder: function(x, y, m, n) {
 
-      if(i === 'top') {
+      if(y === n) {
         while (x < m) {
           this.drawDot(this._ctx, dotSize, x, y);
           x += dotSize * 3;
         }
       }
 
-      if(i === 'left') {
+      if(x === m) {
         while (y < n) {
           this.drawDot(this._ctx, dotSize, x, y);
           y += dotSize * 3;
         }
       }
-
-      //if(i === 'bottom') {
-      //  while (y < n) {
-      //    this.drawDot(this._ctx, dotSize, x, y);
-      //    y += dotSize * 3;
-      //  }
-      //}
-      //
-      //if(i === 'right') {
-      //  while (y < n) {
-      //    this.drawDot(this._ctx, dotSize, x, y);
-      //    y -= dotSize * 3;
-      //  }
-      //}
     },
+
     /**
      * Включение режима перемещения. Запоминается текущее положение курсора,
      * устанавливается флаг, разрешающий перемещение и добавляются обработчики,
