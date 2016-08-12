@@ -82,9 +82,9 @@
     var imageWidth = currentResizer._image.naturalWidth;
     var imageHeight = currentResizer._image.naturalHeight;
 
-
-    if (leftNum < 0 || topNum < 0 || (leftNum + sideNum) > imageWidth || (topNum + sideNum) > imageHeight || isNaN(leftNum) || isNaN(topNum) || isNaN(sideNum)){
+    if (leftNum < 0 || topNum < 0 || (leftNum + sideNum) > imageWidth || (topNum + sideNum) > imageHeight || isNaN(leftNum) || isNaN(topNum) || isNaN(sideNum)) {
       buttonForward.setAttribute('disabled', 'disabled');
+      return false;
     } else {
       buttonForward.removeAttribute('disabled');
       return true;
