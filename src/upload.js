@@ -72,6 +72,7 @@
    * @return {boolean}
    */
   function resizeFormIsValid() {
+
     return true;
   }
 
