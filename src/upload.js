@@ -71,10 +71,63 @@
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
-  function resizeFormIsValid() {
+  function a() {
+    var leftValue = resizeForm.querySelector('#resize-x');
+    var topValue = resizeForm.querySelector('#resize-y');
+    var sideValue = resizeForm.querySelector('#resize-size');
+    var leftNum = parseInt(leftValue.value, 10);
+    var topNum = parseInt(topValue.value, 10);
+    var sideNum = parseInt(sideValue.value, 10);
+    var imageWidth = currentResizer._image.naturalWidth;
+    var imageHeight = currentResizer._image.naturalHeight;
 
-    return true;
+    return (leftNum < 0 || topNum < 0 || (leftNum + sideNum) > imageWidth || (topNum + sideNum) > imageHeight || isNaN(leftNum) || isNaN(topNum) || isNaN(sideNum));
   }
+
+  function resizeFormIsValid() {
+    var leftValue = resizeForm.querySelector('#resize-x');
+    var topValue = resizeForm.querySelector('#resize-y');
+    var sideValue = resizeForm.querySelector('#resize-size');
+    var buttonForward = resizeForm.querySelector('#resize-fwd');
+    leftValue.oninput = a();
+    topValue.oninput = a();
+    sideValue.oninput = a();
+    if (!(leftValue.oninput || topValue.oninput || sideValue.oninput)) {
+      buttonForward.setAttribute('disabled', 'disabled');
+      console.log('lol');
+      return true;
+    } else {
+      console.log('ol');
+      buttonForward.removeAttribute('disabled');
+    }
+  }
+
+  // function resizeFormIsValid() {
+  //   var leftValue = resizeForm.querySelector('#resize-x');
+  //   var topValue = resizeForm.querySelector('#resize-y');
+  //   var sideValue = resizeForm.querySelector('#resize-size');
+  //   var buttonForward = resizeForm.querySelector('#resize-fwd');
+  //   var leftNum = parseInt(leftValue.value, 10);
+  //   var topNum = parseInt(topValue.value, 10);
+  //   var sideNum = parseInt(sideValue.value, 10);
+  //   var imageWidth = currentResizer._image.naturalWidth;
+  //   var imageHeight = currentResizer._image.naturalHeight;
+  //
+  //   if (leftValue.onchange || topValue.onchange || sideValue.onchange) {
+  //     return true;
+  //   }
+  //
+  //   if (leftNum < 0 || topNum < 0 || (leftNum + sideNum) > imageWidth || (topNum + sideNum) > imageHeight || isNaN(leftNum) || isNaN(topNum) || isNaN(sideNum)) {
+  //     buttonForward.setAttribute('disabled', 'disabled');
+  //   } else {
+  //     buttonForward.removeAttribute('disabled');
+  //     buttonForward.onclick = function() {
+  //       console.log('lol');
+  //       return true;
+  //     };
+  //   }
+  //   return false;
+  // }
 
   /**
    * Форма загрузки изображения.
