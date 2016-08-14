@@ -71,23 +71,32 @@
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
+
   function resizeFormIsValid() {
-    var leftValue = resizeForm.querySelector('#resize-x');
-    var topValue = resizeForm.querySelector('#resize-y');
-    var sideValue = resizeForm.querySelector('#resize-size');
-    var buttonForward = resizeForm.querySelector('#resize-fwd');
     var leftNum = parseInt(leftValue.value, 10);
     var topNum = parseInt(topValue.value, 10);
     var sideNum = parseInt(sideValue.value, 10);
     var imageWidth = currentResizer._image.naturalWidth;
     var imageHeight = currentResizer._image.naturalHeight;
 
-    if (leftNum < 0 || topNum < 0 || (leftNum + sideNum) > imageWidth || (topNum + sideNum) > imageHeight || isNaN(leftNum) || isNaN(topNum) || isNaN(sideNum)) {
-      buttonForward.setAttribute('disabled', 'disabled');
-      return false;
-    } else {
+    if (checkValue(leftNum) && checkValue(topNum) && checkWidth(imageWidth) && checkHeight(imageHeight)) {
       buttonForward.removeAttribute('disabled');
       return true;
+    }
+
+    buttonForward.setAttribute('disabled', 'disabled');
+    return false;
+
+    function checkValue(val) {
+      return (val > 0);
+    }
+
+    function checkWidth(val) {
+      return ((leftNum + sideNum) <= val);
+    }
+
+    function checkHeight(val) {
+      return ((topNum + sideNum) <= val);
     }
   }
 
@@ -110,6 +119,11 @@
    * @type {HTMLFormElement}
    */
   var resizeForm = document.forms['upload-resize'];
+
+  var leftValue = resizeForm.querySelector('#resize-x');
+  var topValue = resizeForm.querySelector('#resize-y');
+  var sideValue = resizeForm.querySelector('#resize-size');
+  var buttonForward = resizeForm.querySelector('#resize-fwd');
   /**
    * Форма добавления фильтра.
    * @type {HTMLFormElement}
