@@ -68,11 +68,58 @@
   }
 
   /**
+   * Форма кадрирования изображения.
+   * @type {HTMLFormElement}
+   */
+  var resizeForm = document.forms['upload-resize'];
+  var inputX = resizeForm.querySelector('#resize-x');
+  var inputY = resizeForm.querySelector('#resize-y');
+  var inputSide = resizeForm.querySelector('#resize-size');
+  var buttonSubmit = resizeForm.querySelector('#resize-fwd');
+
+  var inputs = document.querySelectorAll('.upload-resize-control');
+
+  inputs.forEach(function(item) {
+    item.oninput = function() {
+      resizeFormIsValid();
+    };
+  });
+
+  // Метод для проверки устанавливаемых начальных координат обрезанного изображения на неотрицательность
+  function isPositiveNumber(val) {
+    return (val > 0);
+  }
+
+  // Проверяем, не выходит ли правая сторона обрезанного изображения за свою первоначальную границу
+  function isAllowedX(val) {
+    var imageWidth = currentResizer._image.naturalWidth;
+    return ((val) <= imageWidth);
+  }
+
+  // Проверяем, не выходит ли нижняя сторона обрезанного изображения за свою первоначальную границу
+  function isAllowedY(val) {
+    var imageHeight = currentResizer._image.naturalHeight;
+    return ((val) <= imageHeight);
+  }
+
+  /**
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
    */
   function resizeFormIsValid() {
-    return true;
+    var inputValueX = parseInt(inputX.value, 10);
+    var inputValueY = parseInt(inputY.value, 10);
+    var inputValueSide = parseInt(inputSide.value, 10);
+    var croppedRightX = inputValueX + inputValueSide;
+    var croppedBottomY = inputValueY + inputValueSide;
+
+    if (isPositiveNumber(inputValueX) && isPositiveNumber(inputValueY) && isAllowedX(croppedRightX) && isAllowedY(croppedBottomY)) {
+      buttonSubmit.removeAttribute('disabled');
+      return true;
+    }
+
+    buttonSubmit.setAttribute('disabled', 'disabled');
+    return false;
   }
 
   /**
@@ -80,12 +127,6 @@
    * @type {HTMLFormElement}
    */
   var uploadForm = document.forms['upload-select-image'];
-
-  /**
-   * Форма кадрирования изображения.
-   * @type {HTMLFormElement}
-   */
-  var resizeForm = document.forms['upload-resize'];
 
   /**
    * Форма добавления фильтра.
