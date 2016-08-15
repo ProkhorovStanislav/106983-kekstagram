@@ -85,10 +85,8 @@
     };
   });
 
-
   // Метод для проверки устанавливаемых начальных координат обрезанного изображения на неотрицательность
   function isPositiveNumber(val) {
-    //console.log(inputValueX);
     return (val > 0);
   }
 
@@ -103,6 +101,7 @@
     var imageHeight = currentResizer._image.naturalHeight;
     return ((val) <= imageHeight);
   }
+
   /**
    * Проверяет, валидны ли данные, в форме кадрирования.
    * @return {boolean}
