@@ -268,12 +268,62 @@
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
-    cleanupResizer();
-    updateBackground();
-
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
+
+    var checkedInputValue = filterForm.querySelector('input[type="radio"]:checked').value;
+    // Устанавливаем дату уничтожения cookie 9 декабря текущего года
+    var dayXinThisYear = new Date().setMonth(11, 9);
+    // Устанавливаем дату уничтожения cookie 9 декабря следующего года
+    var dayXinNextYear = new Date().setFullYear(new Date().getFullYear() + 1, 11, 9);
+
+    if (wasDayXinThisYear(dayXinThisYear)) {
+      browserCookies.set('upload-filter', checkedInputValue, {expires: (dayXinNextYear - +nowDate) / (24 * 3600 * 1000)});
+    } else {
+      browserCookies.set('upload-filter', checkedInputValue, {expires: (dayXinThisYear - +nowDate) / (24 * 3600 * 1000)});
+    }
+
+    cleanupResizer();
+    updateBackground();
   };
+
+  var browserCookies = require('browser-cookies');
+  var noneFilterInput = filterForm.querySelector('#upload-filter-none');
+  var chromeFilterInput = filterForm.querySelector('#upload-filter-chrome');
+  var sepiaFilterInput = filterForm.querySelector('#upload-filter-sepia');
+  var marvinFilterInput = filterForm.querySelector('#upload-filter-marvin');
+  var filterInCookie = browserCookies.get('upload-filter');
+  var nowDate = new Date();
+
+  getCookies();
+
+  // В соответствии с записью, хранящейся в 'upload-filter' cookies,
+  // если таковая имеется, выделяем соответствующий фильтр
+  function getCookies() {
+    switch(filterInCookie) {
+      case 'none':
+        toMarkChecked(noneFilterInput);
+        break;
+      case 'chrome':
+        toMarkChecked(chromeFilterInput);
+        break;
+      case 'sepia':
+        toMarkChecked(sepiaFilterInput);
+        break;
+      case 'marvin':
+        toMarkChecked(marvinFilterInput);
+        break;
+    }
+  }
+
+  function toMarkChecked(param) {
+    param.setAttribute('checked', 'checked');
+  }
+
+  // Проверяем, был ли день уничтожения куков в текущем году
+  function wasDayXinThisYear(param) {
+    return (param - +nowDate <= 0);
+  }
 
   /**
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
