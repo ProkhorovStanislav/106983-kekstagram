@@ -263,18 +263,16 @@
   function toGetCookieLifeTime() {
     // Устанавливаем дату уничтожения cookie 9 декабря текущего года
     var now = new Date();
-    var dayXDate = new Date();
-    dayXDate.setMonth(11, 9);
-    // Срок хранения cookie в днях
-    var cookieLifeTime = (dayXDate - now) / (24 * 3600 * 1000);
+    var dayX = new Date();
+    dayX.setMonth(11, 9);
     // Проверяем, был ли день уничтожения куков в текущем году
-    if (dayXDate - now <= 0) {
+    if (dayX - now <= 0) {
       // Устанавливаем дату уничтожения cookie 9 декабря следующего года
-      dayXDate.setFullYear(dayXDate.getFullYear() + 1, 11, 9);
-      cookieLifeTime = (dayXDate - now) / (24 * 3600 * 1000);
-      return cookieLifeTime;
+      dayX.setFullYear(dayX.getFullYear() + 1, 11, 9);
     }
 
+    // Срок хранения cookie в днях
+    var cookieLifeTime = (dayX - now) / (24 * 3600 * 1000);
     return cookieLifeTime;
   }
 
