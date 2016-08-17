@@ -292,7 +292,6 @@
     var checkedInputValue = filterForm.querySelector('input[type="radio"]:checked').value;
 
     browserCookies.set('upload-filter', checkedInputValue, {expires: expires});
-    console.log(checkedInputValue);
 
     cleanupResizer();
     updateBackground();
@@ -307,9 +306,8 @@
 
   var browserCookies = require('browser-cookies');
   var filterInCookie = browserCookies.get('upload-filter');
-  filters['none'].setAttribute('checked', 'checked');
-  getCookies();
 
+  getCookies();
   // В соответствии с записью, хранящейся в 'upload-filter' cookies,
   // если таковая имеется, выделяем соответствующий фильтр
   function getCookies() {
@@ -322,7 +320,7 @@
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
    * выбранному значению в форме.
    */
-  filterForm.onchange = function() {
+  function toCheckFilter() {
     if (!filterMap) {
       // Ленивая инициализация. Объект не создается до тех пор, пока
       // не понадобится прочитать его в первый раз, а после этого запоминается
@@ -343,7 +341,10 @@
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
-  };
+  }
+
+  toCheckFilter();
+  filterForm.onchange = toCheckFilter;
 
   cleanupResizer();
   updateBackground();
