@@ -292,6 +292,7 @@
     var checkedInputValue = filterForm.querySelector('input[type="radio"]:checked').value;
 
     browserCookies.set('upload-filter', checkedInputValue, {expires: expires});
+    console.log(checkedInputValue);
 
     cleanupResizer();
     updateBackground();
@@ -306,7 +307,7 @@
 
   var browserCookies = require('browser-cookies');
   var filterInCookie = browserCookies.get('upload-filter');
-
+  filters['none'].setAttribute('checked', 'checked');
   getCookies();
 
   // В соответствии с записью, хранящейся в 'upload-filter' cookies,
