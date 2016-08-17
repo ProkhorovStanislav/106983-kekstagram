@@ -236,7 +236,6 @@
 
     if (resizeFormIsValid()) {
       var image = currentResizer.exportImage().src;
-
       var thumbnails = filterForm.querySelectorAll('.upload-filter-preview');
       for (var i = 0; i < thumbnails.length; i++) {
         thumbnails[i].style.backgroundImage = 'url(' + image + ')';
@@ -260,27 +259,30 @@
     resizeForm.classList.remove('invisible');
   };
 
-  // Рассчитываем срок хранения cookie и сохраняем в переменную
-  var expires = function() {
+  var nowDate = new Date();
+  // Рассчитываем срок хранения cookie исходя из текущей даты
+  function toGetCookieLifeTime() {
     // Устанавливаем дату уничтожения cookie 9 декабря текущего года
-    var dayXinThisYear = new Date().setMonth(11, 9);
-    // Устанавливаем дату уничтожения cookie 9 декабря следующего года
-    var dayXinNextYear = new Date().setFullYear(new Date().getFullYear() + 1, 11, 9);
-    // Срок хранения cookie, если 9 декабря уже было в этом году
-    var beforeDayXinNextYear = (dayXinNextYear - +(new Date())) / (24 * 3600 * 1000);
-    // Срок хранения cookie, если 9 декабря еще не было в этом году
-    var beforeDayXinThisYear = (dayXinThisYear - +(new Date())) / (24 * 3600 * 1000);
+    var dayXDate = new Date();
+    dayXDate.setMonth(11, 9);
+    // Срок хранения cookie в днях
+    var cookieLifeTime = (dayXDate - nowDate) / (24 * 3600 * 1000);
 
-    if (wasDayXinThisYear(dayXinThisYear)) {
-      return beforeDayXinNextYear;
+    if (wasDayXinThisYear(dayXDate)) {
+      // Устанавливаем дату уничтожения cookie 9 декабря следующего года
+      dayXDate.setFullYear(dayXDate.getFullYear() + 1, 11, 9);
+      cookieLifeTime = (dayXDate - nowDate) / (24 * 3600 * 1000);
+      return cookieLifeTime;
     }
 
-    return beforeDayXinThisYear;
-  };
+    return cookieLifeTime;
+  }
+
+  var expires = toGetCookieLifeTime();
 
   // Проверяем, был ли день уничтожения куков в текущем году
-  function wasDayXinThisYear(param) {
-    return (param - +(new Date()) <= 0);
+  function wasDayXinThisYear(dayXDate) {
+    return dayXDate - nowDate <= 0;
   }
 
   /**
@@ -296,17 +298,17 @@
 
     var checkedInputValue = filterForm.querySelector('input[type="radio"]:checked').value;
 
-    browserCookies.set('upload-filter', checkedInputValue, {expires: expires()});
+    browserCookies.set('upload-filter', checkedInputValue, {expires: expires});
 
     cleanupResizer();
     updateBackground();
   };
 
-  var Filters = {
-    'noneFilterInput': filterForm.querySelector('#upload-filter-none'),
-    'chromeFilterInput': filterForm.querySelector('#upload-filter-chrome'),
-    'sepiaFilterInput': filterForm.querySelector('#upload-filter-sepia'),
-    'marvinFilterInput': filterForm.querySelector('#upload-filter-marvin')
+  var filters = {
+    'none': filterForm.querySelector('#upload-filter-none'),
+    'chrome': filterForm.querySelector('#upload-filter-chrome'),
+    'sepia': filterForm.querySelector('#upload-filter-sepia'),
+    'marvin': filterForm.querySelector('#upload-filter-marvin')
   };
 
   var browserCookies = require('browser-cookies');
@@ -317,10 +319,8 @@
   // В соответствии с записью, хранящейся в 'upload-filter' cookies,
   // если таковая имеется, выделяем соответствующий фильтр
   function getCookies() {
-    for (var item in Filters) {
-      if (Filters[item] === filterInCookie) {
-        Filters[item].setAttribute('checked', 'checked');
-      }
+    if (filterInCookie) {
+      filters[filterInCookie].setAttribute('checked', 'checked');
     }
   }
 
