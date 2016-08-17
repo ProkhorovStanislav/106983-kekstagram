@@ -259,19 +259,19 @@
     resizeForm.classList.remove('invisible');
   };
 
-  var nowDate = new Date();
   // Рассчитываем срок хранения cookie исходя из текущей даты
   function toGetCookieLifeTime() {
     // Устанавливаем дату уничтожения cookie 9 декабря текущего года
+    var now = new Date();
     var dayXDate = new Date();
     dayXDate.setMonth(11, 9);
     // Срок хранения cookie в днях
-    var cookieLifeTime = (dayXDate - nowDate) / (24 * 3600 * 1000);
-
-    if (wasDayXinThisYear(dayXDate)) {
+    var cookieLifeTime = (dayXDate - now) / (24 * 3600 * 1000);
+    // Проверяем, был ли день уничтожения куков в текущем году
+    if (dayXDate - now <= 0) {
       // Устанавливаем дату уничтожения cookie 9 декабря следующего года
       dayXDate.setFullYear(dayXDate.getFullYear() + 1, 11, 9);
-      cookieLifeTime = (dayXDate - nowDate) / (24 * 3600 * 1000);
+      cookieLifeTime = (dayXDate - now) / (24 * 3600 * 1000);
       return cookieLifeTime;
     }
 
@@ -279,11 +279,6 @@
   }
 
   var expires = toGetCookieLifeTime();
-
-  // Проверяем, был ли день уничтожения куков в текущем году
-  function wasDayXinThisYear(dayXDate) {
-    return dayXDate - nowDate <= 0;
-  }
 
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
