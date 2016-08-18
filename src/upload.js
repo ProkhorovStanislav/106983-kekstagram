@@ -236,7 +236,6 @@
 
     if (resizeFormIsValid()) {
       var image = currentResizer.exportImage().src;
-
       var thumbnails = filterForm.querySelectorAll('.upload-filter-preview');
       for (var i = 0; i < thumbnails.length; i++) {
         thumbnails[i].style.backgroundImage = 'url(' + image + ')';
@@ -260,6 +259,25 @@
     resizeForm.classList.remove('invisible');
   };
 
+  // Рассчитываем срок хранения cookie исходя из текущей даты
+  function toGetCookieLifeTime() {
+    // Устанавливаем дату уничтожения cookie 9 декабря текущего года
+    var now = new Date();
+    var dayX = new Date();
+    dayX.setMonth(11, 9);
+    // Проверяем, был ли день уничтожения куков в текущем году
+    if (dayX - now <= 0) {
+      // Устанавливаем дату уничтожения cookie 9 декабря следующего года
+      dayX.setFullYear(dayX.getFullYear() + 1, 11, 9);
+    }
+
+    // Срок хранения cookie в днях
+    var cookieLifeTime = (dayX - now) / (24 * 3600 * 1000);
+    return cookieLifeTime;
+  }
+
+  var expires = toGetCookieLifeTime();
+
   /**
    * Отправка формы фильтра. Возвращает в начальное состояние, предварительно
    * записав сохраненный фильтр в cookie.
@@ -268,18 +286,41 @@
   filterForm.onsubmit = function(evt) {
     evt.preventDefault();
 
-    cleanupResizer();
-    updateBackground();
-
     filterForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
+
+    var checkedInputValue = filterForm.querySelector('input[type="radio"]:checked').value;
+
+    browserCookies.set('upload-filter', checkedInputValue, {expires: expires});
+
+    cleanupResizer();
+    updateBackground();
   };
+
+  var filters = {
+    'none': filterForm.querySelector('#upload-filter-none'),
+    'chrome': filterForm.querySelector('#upload-filter-chrome'),
+    'sepia': filterForm.querySelector('#upload-filter-sepia'),
+    'marvin': filterForm.querySelector('#upload-filter-marvin')
+  };
+
+  var browserCookies = require('browser-cookies');
+  var filterInCookie = browserCookies.get('upload-filter');
+
+  getCookies();
+  // В соответствии с записью, хранящейся в 'upload-filter' cookies,
+  // если таковая имеется, выделяем соответствующий фильтр
+  function getCookies() {
+    if (filterInCookie) {
+      filters[filterInCookie].setAttribute('checked', 'checked');
+    }
+  }
 
   /**
    * Обработчик изменения фильтра. Добавляет класс из filterMap соответствующий
    * выбранному значению в форме.
    */
-  filterForm.onchange = function() {
+  function toCheckFilter() {
     if (!filterMap) {
       // Ленивая инициализация. Объект не создается до тех пор, пока
       // не понадобится прочитать его в первый раз, а после этого запоминается
@@ -300,7 +341,10 @@
     // убрать предыдущий примененный класс. Для этого нужно или запоминать его
     // состояние или просто перезаписывать.
     filterImage.className = 'filter-image-preview ' + filterMap[selectedFilter];
-  };
+  }
+
+  toCheckFilter();
+  filterForm.onchange = toCheckFilter;
 
   cleanupResizer();
   updateBackground();
