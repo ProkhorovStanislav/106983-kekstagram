@@ -1,16 +1,28 @@
 'use strict';
 
-var pictures = null;
-var loadPicturesCallback = function(data) {
-  pictures = data;
-};
+// (function() {
+//
+//   function addScriptToMainPage(url, callbackFunction) {
+//     var scriptEl = document.createElement('script');
+//     scriptEl.src = url + '/?callback=' + callbackFunction;
+//     document.body.appendChild(scriptEl);
+//   }
+//
+//   addScriptToMainPage('http://localhost:1506/api/pictures', 'loadPicturesCallback');
+//   console.log(addScriptToMainPage('http://localhost:1506/api/pictures', 'loadPicturesCallback'));
+// })();
 
-var scriptEl = document.createElement('script');
-scriptEl.src = 'data.js';
-document.body.appendChild(scriptEl);
+(function() {
 
+  function addScriptToMainPage(url, callback) {
+    var scriptEl = document.createElement('script');
+    scriptEl.src = url + '/?callback=' + callback;
+    document.body.appendChild(scriptEl);
+  }
 
-//var address = 'http://localhost:1506/api/pictures?callback=<название JSONP-коллбэка>';
+  addScriptToMainPage('http://localhost:1506/api/pictures', 'loadPicturesCallback' );
+
+})();
 
 /**
  Создайте функцию, с помощью которой можно будет выполнять JSONP запросы.
