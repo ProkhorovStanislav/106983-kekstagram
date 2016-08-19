@@ -4,7 +4,6 @@
   var pictures = null;
   window.loadPicturesCallback = function(data) {
     pictures = data;
-    console.log(pictures);
   };
   function addScriptToMainPage(url, callback) {
     var scriptEl = document.createElement('script');
