@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url] [![Dependency status][dependency-image]][dependency-url]
 
 * Студент: [Станислав Прохоров](https://up.htmlacademy.ru/javascript/6/user/106983).
-* Наставник: Александр Ветров.
+* Наставник: Антон Калин.
 
 ---
 

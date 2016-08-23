@@ -1,26 +1,14 @@
 'use strict';
 
 (function() {
-  var pictures = null;
+  var pictures = [];
   var picturesBlock = document.querySelector('.pictures');
   var templateElement = document.querySelector('template');
-  var filtersBlock = document.querySelector('.filters');
   var IMAGE_LOAD_TIMEOUT = 10000;
   var elementToClone;
+  var filtersBlock = document.querySelector('.filters');
 
-  window.loadPicturesCallback = function(data) {
-    pictures = data;
-    pictures.forEach(function(picture) {
-      getPictureElement(picture, picturesBlock);
-    });
-
-  };
-
-  function addScriptToMainPage(url, callback) {
-    var scriptEl = document.createElement('script');
-    scriptEl.src = url + '/?callback=' + callback;
-    document.body.appendChild(scriptEl);
-  }
+  filtersBlock.classList.add('hidden');
 
   addScriptToMainPage('http://localhost:1506/api/pictures', 'loadPicturesCallback');
 
@@ -30,39 +18,48 @@
     elementToClone = templateElement.querySelector('.picture');
   }
 
-  filtersBlock.classList.add('hidden');
+  window.loadPicturesCallback = function(response) {
+    pictures = response;
+    pictures.forEach(function(picture) {
+      getPictureElement(picture, picturesBlock);
+    });
+  };
 
-  var getPictureElement = function(data, container) {
+  function addScriptToMainPage(url, callback) {
+    var scriptEl = document.createElement('script');
+    scriptEl.src = url + '/?callback=' + callback;
+    document.body.appendChild(scriptEl);
+  }
+
+  function getPictureElement(response, container) {
     var element = elementToClone.cloneNode(true);
-    container.appendChild(element);
     var newImage = new Image();
-    var imageField = element.querySelector('img');
+    var image = element.querySelector('img');
     var imageLoadTimeout;
-    element.querySelector('.picture-comments').textContent = data.likes;
-    element.querySelector('.picture-likes').textContent = data.comments;
+
+    container.appendChild(element);
+    element.querySelector('.picture-comments').textContent = response.likes;
+    element.querySelector('.picture-likes').textContent = response.comments;
+    newImage.src = response.url;
 
     newImage.onload = function(evt) {
       clearTimeout(imageLoadTimeout);
-      imageField.width = '182';
-      imageField.height = '182';
-      imageField.src = evt.target.src;
+      image.width = '182';
+      image.height = '182';
+      image.src = evt.target.src;
     };
 
     newImage.onerror = function() {
       element.classList.add('picture-load-failure');
     };
 
-    newImage.src = data.url;
-
     imageLoadTimeout = setTimeout(function() {
-      imageField.src = '';
+      image.src = '';
       element.classList.add('picture-load-failure');
     }, IMAGE_LOAD_TIMEOUT);
 
     return element;
-  };
-
-  filtersBlock.classList.remove('hidden');
+  }
 
 })();
 
