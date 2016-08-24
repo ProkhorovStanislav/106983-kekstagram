@@ -3,5 +3,6 @@
 require('./upload-stat.min');
 require('./upload')();
 require('./resizer')();
-require('./pictures')();
+require('./load');
+require('./pictures');
 

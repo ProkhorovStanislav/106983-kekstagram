@@ -112,14 +112,6 @@ module.exports = function() {
       // Координаты задаются от центра холста.
       this._ctx.drawImage(this._image, displX, displY);
 
-      // Отрисовка прямоугольника, обозначающего область изображения после
-      // кадрирования. Координаты задаются от центра.
-      /*this._ctx.strokeRect(
-       (-this._resizeConstraint.side / 2),
-       (-this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2),
-       this._resizeConstraint.side - this._ctx.lineWidth / 2,
-       this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
-
       // Добавляем затенение области, выходящей за рамку изображения после кадрирования
       this._ctx.beginPath();
       // Отрисовка внутренней границы области, совпадающей с рамкой изображения после кадрирования
