@@ -1,11 +1,11 @@
 'use strict';
 
-(function() {
+module.exports = function() {
   /**
    * @constructor
    * @param {string} image
    */
-  var Resizer = function(image) {
+  var Resizer = function (image) {
     // Изображение, с которым будет вестись работа.
     this._image = new Image();
     this._image.src = image;
@@ -15,7 +15,7 @@
     this._ctx = this._container.getContext('2d');
 
     // Создаем холст только после загрузки изображения.
-    this._image.onload = function() {
+    this._image.onload = function () {
       // Размер холста равен размеру загруженного изображения. Это нужно
       // для удобства работы с координатами.
       this._container.width = this._image.naturalWidth;
@@ -31,15 +31,15 @@
 
       // Размер меньшей стороны изображения.
       var side = Math.min(
-          this._container.width * INITIAL_SIDE_RATIO,
-          this._container.height * INITIAL_SIDE_RATIO);
+        this._container.width * INITIAL_SIDE_RATIO,
+        this._container.height * INITIAL_SIDE_RATIO);
 
       // Изначально предлагаемое кадрирование — часть по центру с размером в 3/4
       // от размера меньшей стороны.
       this._resizeConstraint = new Square(
-          this._container.width / 2 - side / 2,
-          this._container.height / 2 - side / 2,
-          side);
+        this._container.width / 2 - side / 2,
+        this._container.height / 2 - side / 2,
+        side);
 
       // Отрисовка изначального состояния канваса.
       this.setConstraint();
@@ -79,7 +79,7 @@
     /**
      * Отрисовка канваса.
      */
-    redraw: function() {
+    redraw: function () {
       // Очистка изображения.
       this._ctx.clearRect(0, 0, this._container.width, this._container.height);
 
@@ -115,10 +115,10 @@
       // Отрисовка прямоугольника, обозначающего область изображения после
       // кадрирования. Координаты задаются от центра.
       /*this._ctx.strokeRect(
-          (-this._resizeConstraint.side / 2),
-          (-this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2),
-          this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
+       (-this._resizeConstraint.side / 2),
+       (-this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2),
+       this._resizeConstraint.side - this._ctx.lineWidth / 2,
+       this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
 
       // Добавляем затенение области, выходящей за рамку изображения после кадрирования
       this._ctx.beginPath();
@@ -144,7 +144,7 @@
       this._ctx.textAlign = 'center';
       this._ctx.font = '20px Arial';
       this._ctx.fillStyle = '#fff';
-      this._ctx.fillText( this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 9);
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 9);
 
       document.body.appendChild(this.getMyCanvas());
 
@@ -158,37 +158,37 @@
     },
 
     // Отрисовывание рамки из точек. Для отрисовки каждой стороны вызывается функция с соответствующими параметрами
-    getMyCanvas: function() {
+    getMyCanvas: function () {
       var borderElem = document.createElement('canvas');
       var dotSize = 2;
 
       this.drawBorder(
-          -this._resizeConstraint.side / 2 - dotSize,
-          -this._resizeConstraint.side / 2 - dotSize * 3,
-          this._resizeConstraint.side / 2,
-          -this._resizeConstraint.side / 2 - dotSize * 3,
-          dotSize);
+        -this._resizeConstraint.side / 2 - dotSize,
+        -this._resizeConstraint.side / 2 - dotSize * 3,
+        this._resizeConstraint.side / 2,
+        -this._resizeConstraint.side / 2 - dotSize * 3,
+        dotSize);
 
       this.drawBorder(
-          -this._resizeConstraint.side / 2 - dotSize,
-          -this._resizeConstraint.side / 2 - dotSize * 2,
-          -this._resizeConstraint.side / 2 - dotSize,
-          this._resizeConstraint.side / 2,
-          dotSize);
+        -this._resizeConstraint.side / 2 - dotSize,
+        -this._resizeConstraint.side / 2 - dotSize * 2,
+        -this._resizeConstraint.side / 2 - dotSize,
+        this._resizeConstraint.side / 2,
+        dotSize);
 
       this.drawBorder(
-          this._resizeConstraint.side / 2,
-          -this._resizeConstraint.side / 2 - dotSize * 2,
-          this._resizeConstraint.side / 2,
-          this._resizeConstraint.side / 2,
-          dotSize);
+        this._resizeConstraint.side / 2,
+        -this._resizeConstraint.side / 2 - dotSize * 2,
+        this._resizeConstraint.side / 2,
+        this._resizeConstraint.side / 2,
+        dotSize);
 
       this.drawBorder(
-          -this._resizeConstraint.side / 2,
-          this._resizeConstraint.side / 2 - dotSize * 2,
-          this._resizeConstraint.side / 2,
-          this._resizeConstraint.side / 2 - dotSize * 2,
-          dotSize);
+        -this._resizeConstraint.side / 2,
+        this._resizeConstraint.side / 2 - dotSize * 2,
+        this._resizeConstraint.side / 2,
+        this._resizeConstraint.side / 2 - dotSize * 2,
+        dotSize);
 
       return borderElem;
     },
@@ -196,7 +196,7 @@
     /**
      * Отрисовывание единичного кружка - элемента кастомной рамки, обозначающей область изображения после кадрирования. Координаты задаются от центра.
      */
-    drawDot: function(ctx, size, x, y) {
+    drawDot: function (ctx, size, x, y) {
       this._ctx.beginPath();
       this._ctx.arc(x, y, size, 0, Math.PI * 2, false);
       this._ctx.fillStyle = '#ffe753';
@@ -212,7 +212,7 @@
      * @param dotSize - радиус точки, элемента рамки
      * Сравнивая переданные параметры попарно, функция рисует либо горизонтальную либо вертикальную сторону рамки
      */
-    drawBorder: function(x, y, m, n, dotSize) {
+    drawBorder: function (x, y, m, n, dotSize) {
       if (x !== m && y !== n || x === m && y === n || x > m || y > n) {
         console.log('the parameters passed to the function are incorrect');
         return;
@@ -241,7 +241,7 @@
      * @param {number} y
      * @private
      */
-    _enterDragMode: function(x, y) {
+    _enterDragMode: function (x, y) {
       this._cursorPosition = new Coordinate(x, y);
       document.body.addEventListener('mousemove', this._onDrag);
       document.body.addEventListener('mouseup', this._onDragEnd);
@@ -251,7 +251,7 @@
      * Выключение режима перемещения.
      * @private
      */
-    _exitDragMode: function() {
+    _exitDragMode: function () {
       this._cursorPosition = null;
       document.body.removeEventListener('mousemove', this._onDrag);
       document.body.removeEventListener('mouseup', this._onDragEnd);
@@ -263,10 +263,10 @@
      * @param {number} y
      * @private
      */
-    updatePosition: function(x, y) {
+    updatePosition: function (x, y) {
       this.moveConstraint(
-          this._cursorPosition.x - x,
-          this._cursorPosition.y - y);
+        this._cursorPosition.x - x,
+        this._cursorPosition.y - y);
       this._cursorPosition = new Coordinate(x, y);
     },
 
@@ -274,7 +274,7 @@
      * @param {MouseEvent} evt
      * @private
      */
-    _onDragStart: function(evt) {
+    _onDragStart: function (evt) {
       this._enterDragMode(evt.clientX, evt.clientY);
     },
 
@@ -282,7 +282,7 @@
      * Обработчик окончания перетаскивания.
      * @private
      */
-    _onDragEnd: function() {
+    _onDragEnd: function () {
       this._exitDragMode();
     },
 
@@ -291,7 +291,7 @@
      * @param {MouseEvent} evt
      * @private
      */
-    _onDrag: function(evt) {
+    _onDrag: function (evt) {
       this.updatePosition(evt.clientX, evt.clientY);
     },
 
@@ -299,7 +299,7 @@
      * Добавление элемента в DOM.
      * @param {Element} element
      */
-    setElement: function(element) {
+    setElement: function (element) {
       if (this._element === element) {
         return;
       }
@@ -314,7 +314,7 @@
      * Возвращает кадрирование элемента.
      * @return {Square}
      */
-    getConstraint: function() {
+    getConstraint: function () {
       return this._resizeConstraint;
     },
 
@@ -324,11 +324,11 @@
      * @param {number} deltaY
      * @param {number} deltaSide
      */
-    moveConstraint: function(deltaX, deltaY, deltaSide) {
+    moveConstraint: function (deltaX, deltaY, deltaSide) {
       this.setConstraint(
-          this._resizeConstraint.x + (deltaX || 0),
-          this._resizeConstraint.y + (deltaY || 0),
-          this._resizeConstraint.side + (deltaSide || 0));
+        this._resizeConstraint.x + (deltaX || 0),
+        this._resizeConstraint.y + (deltaY || 0),
+        this._resizeConstraint.side + (deltaSide || 0));
     },
 
     /**
@@ -336,7 +336,7 @@
      * @param {number} y
      * @param {number} side
      */
-    setConstraint: function(x, y, side) {
+    setConstraint: function (x, y, side) {
       if (typeof x !== 'undefined') {
         this._resizeConstraint.x = x;
       }
@@ -349,7 +349,7 @@
         this._resizeConstraint.side = side;
       }
 
-      requestAnimationFrame(function() {
+      requestAnimationFrame(function () {
         this.redraw();
         window.dispatchEvent(new CustomEvent('resizerchange'));
       }.bind(this));
@@ -359,7 +359,7 @@
      * Удаление. Убирает контейнер из родительского элемента, убирает
      * все обработчики событий и убирает ссылки.
      */
-    remove: function() {
+    remove: function () {
       this._element.removeChild(this._container);
 
       this._container.removeEventListener('mousedown', this._onDragStart);
@@ -371,7 +371,7 @@
      * картинки в src в формате dataURL.
      * @return {Image}
      */
-    exportImage: function() {
+    exportImage: function () {
       // Создаем Image, с размерами, указанными при кадрировании.
       var imageToExport = new Image();
 
@@ -385,8 +385,8 @@
       temporaryCanvas.width = this._resizeConstraint.side;
       temporaryCanvas.height = this._resizeConstraint.side;
       temporaryCtx.drawImage(this._image,
-          -this._resizeConstraint.x,
-          -this._resizeConstraint.y);
+        -this._resizeConstraint.x,
+        -this._resizeConstraint.y);
       imageToExport.src = temporaryCanvas.toDataURL('image/png');
 
       return imageToExport;
@@ -401,7 +401,7 @@
    * @param {number} side
    * @private
    */
-  var Square = function(x, y, side) {
+  var Square = function (x, y, side) {
     this.x = x;
     this.y = y;
     this.side = side;
@@ -414,10 +414,10 @@
    * @param {number} y
    * @private
    */
-  var Coordinate = function(x, y) {
+  var Coordinate = function (x, y) {
     this.x = x;
     this.y = y;
   };
 
   window.Resizer = Resizer;
-})();
+};
