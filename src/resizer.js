@@ -5,7 +5,7 @@ module.exports = function() {
    * @constructor
    * @param {string} image
    */
-  var Resizer = function (image) {
+  var Resizer = function(image) {
     // Изображение, с которым будет вестись работа.
     this._image = new Image();
     this._image.src = image;
@@ -15,7 +15,7 @@ module.exports = function() {
     this._ctx = this._container.getContext('2d');
 
     // Создаем холст только после загрузки изображения.
-    this._image.onload = function () {
+    this._image.onload = function() {
       // Размер холста равен размеру загруженного изображения. Это нужно
       // для удобства работы с координатами.
       this._container.width = this._image.naturalWidth;
@@ -79,7 +79,7 @@ module.exports = function() {
     /**
      * Отрисовка канваса.
      */
-    redraw: function () {
+    redraw: function() {
       // Очистка изображения.
       this._ctx.clearRect(0, 0, this._container.width, this._container.height);
 
@@ -158,7 +158,7 @@ module.exports = function() {
     },
 
     // Отрисовывание рамки из точек. Для отрисовки каждой стороны вызывается функция с соответствующими параметрами
-    getMyCanvas: function () {
+    getMyCanvas: function() {
       var borderElem = document.createElement('canvas');
       var dotSize = 2;
 
@@ -196,7 +196,7 @@ module.exports = function() {
     /**
      * Отрисовывание единичного кружка - элемента кастомной рамки, обозначающей область изображения после кадрирования. Координаты задаются от центра.
      */
-    drawDot: function (ctx, size, x, y) {
+    drawDot: function(ctx, size, x, y) {
       this._ctx.beginPath();
       this._ctx.arc(x, y, size, 0, Math.PI * 2, false);
       this._ctx.fillStyle = '#ffe753';
@@ -212,7 +212,7 @@ module.exports = function() {
      * @param dotSize - радиус точки, элемента рамки
      * Сравнивая переданные параметры попарно, функция рисует либо горизонтальную либо вертикальную сторону рамки
      */
-    drawBorder: function (x, y, m, n, dotSize) {
+    drawBorder: function(x, y, m, n, dotSize) {
       if (x !== m && y !== n || x === m && y === n || x > m || y > n) {
         console.log('the parameters passed to the function are incorrect');
         return;
@@ -241,7 +241,7 @@ module.exports = function() {
      * @param {number} y
      * @private
      */
-    _enterDragMode: function (x, y) {
+    _enterDragMode: function(x, y) {
       this._cursorPosition = new Coordinate(x, y);
       document.body.addEventListener('mousemove', this._onDrag);
       document.body.addEventListener('mouseup', this._onDragEnd);
@@ -251,7 +251,7 @@ module.exports = function() {
      * Выключение режима перемещения.
      * @private
      */
-    _exitDragMode: function () {
+    _exitDragMode: function() {
       this._cursorPosition = null;
       document.body.removeEventListener('mousemove', this._onDrag);
       document.body.removeEventListener('mouseup', this._onDragEnd);
@@ -263,7 +263,7 @@ module.exports = function() {
      * @param {number} y
      * @private
      */
-    updatePosition: function (x, y) {
+    updatePosition: function(x, y) {
       this.moveConstraint(
         this._cursorPosition.x - x,
         this._cursorPosition.y - y);
@@ -274,7 +274,7 @@ module.exports = function() {
      * @param {MouseEvent} evt
      * @private
      */
-    _onDragStart: function (evt) {
+    _onDragStart: function(evt) {
       this._enterDragMode(evt.clientX, evt.clientY);
     },
 
@@ -282,7 +282,7 @@ module.exports = function() {
      * Обработчик окончания перетаскивания.
      * @private
      */
-    _onDragEnd: function () {
+    _onDragEnd: function() {
       this._exitDragMode();
     },
 
@@ -291,7 +291,7 @@ module.exports = function() {
      * @param {MouseEvent} evt
      * @private
      */
-    _onDrag: function (evt) {
+    _onDrag: function(evt) {
       this.updatePosition(evt.clientX, evt.clientY);
     },
 
@@ -299,7 +299,7 @@ module.exports = function() {
      * Добавление элемента в DOM.
      * @param {Element} element
      */
-    setElement: function (element) {
+    setElement: function(element) {
       if (this._element === element) {
         return;
       }
@@ -314,7 +314,7 @@ module.exports = function() {
      * Возвращает кадрирование элемента.
      * @return {Square}
      */
-    getConstraint: function () {
+    getConstraint: function() {
       return this._resizeConstraint;
     },
 
@@ -324,7 +324,7 @@ module.exports = function() {
      * @param {number} deltaY
      * @param {number} deltaSide
      */
-    moveConstraint: function (deltaX, deltaY, deltaSide) {
+    moveConstraint: function(deltaX, deltaY, deltaSide) {
       this.setConstraint(
         this._resizeConstraint.x + (deltaX || 0),
         this._resizeConstraint.y + (deltaY || 0),
@@ -336,7 +336,7 @@ module.exports = function() {
      * @param {number} y
      * @param {number} side
      */
-    setConstraint: function (x, y, side) {
+    setConstraint: function(x, y, side) {
       if (typeof x !== 'undefined') {
         this._resizeConstraint.x = x;
       }
@@ -349,7 +349,7 @@ module.exports = function() {
         this._resizeConstraint.side = side;
       }
 
-      requestAnimationFrame(function () {
+      requestAnimationFrame(function() {
         this.redraw();
         window.dispatchEvent(new CustomEvent('resizerchange'));
       }.bind(this));
@@ -359,7 +359,7 @@ module.exports = function() {
      * Удаление. Убирает контейнер из родительского элемента, убирает
      * все обработчики событий и убирает ссылки.
      */
-    remove: function () {
+    remove: function() {
       this._element.removeChild(this._container);
 
       this._container.removeEventListener('mousedown', this._onDragStart);
@@ -371,7 +371,7 @@ module.exports = function() {
      * картинки в src в формате dataURL.
      * @return {Image}
      */
-    exportImage: function () {
+    exportImage: function() {
       // Создаем Image, с размерами, указанными при кадрировании.
       var imageToExport = new Image();
 
@@ -401,7 +401,7 @@ module.exports = function() {
    * @param {number} side
    * @private
    */
-  var Square = function (x, y, side) {
+  var Square = function(x, y, side) {
     this.x = x;
     this.y = y;
     this.side = side;
@@ -414,7 +414,7 @@ module.exports = function() {
    * @param {number} y
    * @private
    */
-  var Coordinate = function (x, y) {
+  var Coordinate = function(x, y) {
     this.x = x;
     this.y = y;
   };
