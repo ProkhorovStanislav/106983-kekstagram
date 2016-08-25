@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+module.exports = function() {
   /**
    * @constructor
    * @param {string} image
@@ -31,15 +31,15 @@
 
       // Размер меньшей стороны изображения.
       var side = Math.min(
-          this._container.width * INITIAL_SIDE_RATIO,
-          this._container.height * INITIAL_SIDE_RATIO);
+        this._container.width * INITIAL_SIDE_RATIO,
+        this._container.height * INITIAL_SIDE_RATIO);
 
       // Изначально предлагаемое кадрирование — часть по центру с размером в 3/4
       // от размера меньшей стороны.
       this._resizeConstraint = new Square(
-          this._container.width / 2 - side / 2,
-          this._container.height / 2 - side / 2,
-          side);
+        this._container.width / 2 - side / 2,
+        this._container.height / 2 - side / 2,
+        side);
 
       // Отрисовка изначального состояния канваса.
       this.setConstraint();
@@ -112,14 +112,6 @@
       // Координаты задаются от центра холста.
       this._ctx.drawImage(this._image, displX, displY);
 
-      // Отрисовка прямоугольника, обозначающего область изображения после
-      // кадрирования. Координаты задаются от центра.
-      /*this._ctx.strokeRect(
-          (-this._resizeConstraint.side / 2),
-          (-this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2),
-          this._resizeConstraint.side - this._ctx.lineWidth / 2,
-          this._resizeConstraint.side - this._ctx.lineWidth / 2);*/
-
       // Добавляем затенение области, выходящей за рамку изображения после кадрирования
       this._ctx.beginPath();
       // Отрисовка внутренней границы области, совпадающей с рамкой изображения после кадрирования
@@ -144,7 +136,7 @@
       this._ctx.textAlign = 'center';
       this._ctx.font = '20px Arial';
       this._ctx.fillStyle = '#fff';
-      this._ctx.fillText( this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 9);
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 9);
 
       document.body.appendChild(this.getMyCanvas());
 
@@ -163,32 +155,32 @@
       var dotSize = 2;
 
       this.drawBorder(
-          -this._resizeConstraint.side / 2 - dotSize,
-          -this._resizeConstraint.side / 2 - dotSize * 3,
-          this._resizeConstraint.side / 2,
-          -this._resizeConstraint.side / 2 - dotSize * 3,
-          dotSize);
+        -this._resizeConstraint.side / 2 - dotSize,
+        -this._resizeConstraint.side / 2 - dotSize * 3,
+        this._resizeConstraint.side / 2,
+        -this._resizeConstraint.side / 2 - dotSize * 3,
+        dotSize);
 
       this.drawBorder(
-          -this._resizeConstraint.side / 2 - dotSize,
-          -this._resizeConstraint.side / 2 - dotSize * 2,
-          -this._resizeConstraint.side / 2 - dotSize,
-          this._resizeConstraint.side / 2,
-          dotSize);
+        -this._resizeConstraint.side / 2 - dotSize,
+        -this._resizeConstraint.side / 2 - dotSize * 2,
+        -this._resizeConstraint.side / 2 - dotSize,
+        this._resizeConstraint.side / 2,
+        dotSize);
 
       this.drawBorder(
-          this._resizeConstraint.side / 2,
-          -this._resizeConstraint.side / 2 - dotSize * 2,
-          this._resizeConstraint.side / 2,
-          this._resizeConstraint.side / 2,
-          dotSize);
+        this._resizeConstraint.side / 2,
+        -this._resizeConstraint.side / 2 - dotSize * 2,
+        this._resizeConstraint.side / 2,
+        this._resizeConstraint.side / 2,
+        dotSize);
 
       this.drawBorder(
-          -this._resizeConstraint.side / 2,
-          this._resizeConstraint.side / 2 - dotSize * 2,
-          this._resizeConstraint.side / 2,
-          this._resizeConstraint.side / 2 - dotSize * 2,
-          dotSize);
+        -this._resizeConstraint.side / 2,
+        this._resizeConstraint.side / 2 - dotSize * 2,
+        this._resizeConstraint.side / 2,
+        this._resizeConstraint.side / 2 - dotSize * 2,
+        dotSize);
 
       return borderElem;
     },
@@ -265,8 +257,8 @@
      */
     updatePosition: function(x, y) {
       this.moveConstraint(
-          this._cursorPosition.x - x,
-          this._cursorPosition.y - y);
+        this._cursorPosition.x - x,
+        this._cursorPosition.y - y);
       this._cursorPosition = new Coordinate(x, y);
     },
 
@@ -326,9 +318,9 @@
      */
     moveConstraint: function(deltaX, deltaY, deltaSide) {
       this.setConstraint(
-          this._resizeConstraint.x + (deltaX || 0),
-          this._resizeConstraint.y + (deltaY || 0),
-          this._resizeConstraint.side + (deltaSide || 0));
+        this._resizeConstraint.x + (deltaX || 0),
+        this._resizeConstraint.y + (deltaY || 0),
+        this._resizeConstraint.side + (deltaSide || 0));
     },
 
     /**
@@ -385,8 +377,8 @@
       temporaryCanvas.width = this._resizeConstraint.side;
       temporaryCanvas.height = this._resizeConstraint.side;
       temporaryCtx.drawImage(this._image,
-          -this._resizeConstraint.x,
-          -this._resizeConstraint.y);
+        -this._resizeConstraint.x,
+        -this._resizeConstraint.y);
       imageToExport.src = temporaryCanvas.toDataURL('image/png');
 
       return imageToExport;
@@ -420,4 +412,4 @@
   };
 
   window.Resizer = Resizer;
-})();
+};
