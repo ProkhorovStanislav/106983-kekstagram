@@ -1,64 +1,40 @@
 'use strict';
 
-module.exports = function() {
-  var pictures = [];
-  var picturesBlock = document.querySelector('.pictures');
-  var templateElement = document.querySelector('template');
-  var IMAGE_LOAD_TIMEOUT = 10000;
+function getPictureElement(response, container) {
   var elementToClone;
-  var filtersBlock = document.querySelector('.filters');
-
-  filtersBlock.classList.add('hidden');
-
-  addScriptToMainPage('http://localhost:1506/api/pictures', 'loadPicturesCallback');
-
+  var templateElement = document.querySelector('template');
   if ('content' in templateElement) {
     elementToClone = templateElement.content.querySelector('.picture');
   } else {
     elementToClone = templateElement.querySelector('.picture');
   }
+  var IMAGE_LOAD_TIMEOUT = 10000;
+  var element = elementToClone.cloneNode(true);
+  container.appendChild(element);
+  element.querySelector('.picture-comments').textContent = response.likes;
+  element.querySelector('.picture-likes').textContent = response.comments;
+  var newImage = new Image();
+  var image = element.querySelector('img');
+  var imageLoadTimeout;
+  newImage.src = response.url;
 
-  window.loadPicturesCallback = function(response) {
-    pictures = response;
-    pictures.forEach(function(picture) {
-      getPictureElement(picture, picturesBlock);
-    });
+  newImage.onload = function(evt) {
+    clearTimeout(imageLoadTimeout);
+    image.width = '182';
+    image.height = '182';
+    image.src = evt.target.src;
   };
 
-  function addScriptToMainPage(url, callback) {
-    var scriptEl = document.createElement('script');
-    scriptEl.src = url + '/?callback=' + callback;
-    document.body.appendChild(scriptEl);
-  }
+  newImage.onerror = function() {
+    element.classList.add('picture-load-failure');
+  };
 
-  function getPictureElement(response, container) {
-    var element = elementToClone.cloneNode(true);
-    var newImage = new Image();
-    var image = element.querySelector('img');
-    var imageLoadTimeout;
+  imageLoadTimeout = setTimeout(function() {
+    image.src = '';
+    element.classList.add('picture-load-failure');
+  }, IMAGE_LOAD_TIMEOUT);
 
-    container.appendChild(element);
-    element.querySelector('.picture-comments').textContent = response.likes;
-    element.querySelector('.picture-likes').textContent = response.comments;
-    newImage.src = response.url;
+  return element;
+}
 
-    newImage.onload = function(evt) {
-      clearTimeout(imageLoadTimeout);
-      image.width = '182';
-      image.height = '182';
-      image.src = evt.target.src;
-    };
-
-    newImage.onerror = function() {
-      element.classList.add('picture-load-failure');
-    };
-
-    imageLoadTimeout = setTimeout(function() {
-      image.src = '';
-      element.classList.add('picture-load-failure');
-    }, IMAGE_LOAD_TIMEOUT);
-
-    return element;
-  }
-
-};
+module.exports = getPictureElement;
