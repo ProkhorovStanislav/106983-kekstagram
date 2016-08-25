@@ -9,6 +9,7 @@ var load = require('./load');
 var pictures = [];
 var picturesBlock = document.querySelector('.pictures');
 var filtersBlock = document.querySelector('.filters');
+
 filtersBlock.classList.add('hidden');
 
 load('http://localhost:1506/api/pictures', 'loadPicturesCallback');
