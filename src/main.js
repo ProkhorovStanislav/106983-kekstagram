@@ -3,6 +3,7 @@
 require('./upload-stat.min');
 require('./upload')();
 require('./resizer')();
+require('./gallery');
 
 var getPictureElement = require('./pictures');
 var load = require('./load');
