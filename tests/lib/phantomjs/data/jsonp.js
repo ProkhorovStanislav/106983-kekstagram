@@ -1,7 +1,7 @@
 __picturesLoadCallback([{
   "likes": 40,
   "comments": 12,
-  "url": "photos/1.jpg",
+  "url": "photos/failed1.jpg",
   "date": "2016-01-05"
 }, {
   "likes": 125,
