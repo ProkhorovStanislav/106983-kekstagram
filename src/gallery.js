@@ -17,7 +17,7 @@
     this.pictures = pictures;
   };
 
-  Gallery.prototype.show = function(pictureNumber) {
+  Gallery.prototype.show = function(index) {
     var that = this;
 
     this.galleryOverlayClose.onclick = function() {
@@ -25,11 +25,15 @@
     };
 
     this.galleryOverlay.onclick = function() {
-      that.setActivePicture(that.activePicture + 1);
+      var indexNext = that.activePicture + 1;
+      if (indexNext > that.pictures.length) {
+        indexNext = 0;
+      }
+      that.setActivePicture(indexNext);
     };
 
     this.galleryOverlay.classList.remove('invisible');
-    that.setActivePicture(pictureNumber);
+    that.setActivePicture(index);
   };
 
   Gallery.prototype.hide = function() {
@@ -38,15 +42,13 @@
     this.galleryOverlay.onclick = null;
   };
 
-  Gallery.prototype.setActivePicture = function(pictureNumber) {
-    if (pictureNumber > this.pictures.length - 1) {
-      pictureNumber = 0;
-    }
+  Gallery.prototype.setActivePicture = function(index) {
 
-    this.activePicture = pictureNumber;
-    this.galleryOverlayImage.src = this.pictures[this.activePicture].url;
-    this.galleryOverlayLikes.textContent = this.pictures[this.activePicture].likes;
-    this.galleryOverlayComments.textContent = this.pictures[this.activePicture].comments;
+    this.activePicture = index;
+    var currentPicture = this.pictures[this.activePicture];
+    this.galleryOverlayImage.src = currentPicture.url;
+    this.galleryOverlayLikes.textContent = currentPicture.likes;
+    this.galleryOverlayComments.textContent = currentPicture.comments;
   };
 
   module.exports = new Gallery();

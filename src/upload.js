@@ -57,7 +57,7 @@ module.exports = function() {
    */
   function updateBackground() {
     var images = [
-      'img/logo-background-failed1.jpg',
+      'img/logo-background-failed.jpg',
       'img/logo-background-2.jpg',
       'img/logo-background-3.jpg'
     ];
