@@ -1,7 +1,7 @@
 'use strict';
 
 (function() {
-  var getPictureElement = require('./picture');
+  var Picture = require('./picture');
   var gallery = require('./gallery');
   var load = require('./load');
   var pictures = [];
@@ -15,7 +15,8 @@
   window.loadPicturesCallback = function(response) {
     pictures = response;
     pictures.forEach(function(picture, index) {
-      getPictureElement(picture, picturesBlock, index);
+      var newPicture = new Picture(picture, picturesBlock, index);
+      picturesBlock.appendChild(newPicture.element);
     });
     gallery.setPictures(pictures);
   };
