@@ -11,42 +11,47 @@ if ('content' in templateElement) {
   elementToClone = templateElement.querySelector('.picture');
 }
 
-var Picture = function(response, container, index) {
+var Picture = function(response, index) {
   var that = this;
-  that.element = elementToClone.cloneNode(true);
-  that.data = response;
-  var pictureLikes = that.element.querySelector('.picture-likes');
-  var pictureComments = that.element.querySelector('.picture-comments');
+  this.element = elementToClone.cloneNode(true);
+  this.data = response;
+  var pictureLikes = this.element.querySelector('.picture-likes');
+  var pictureComments = this.element.querySelector('.picture-comments');
 
-  pictureLikes.textContent = that.data.likes;
-  pictureComments.textContent = that.data.comments;
+  pictureLikes.textContent = this.data.likes;
+  pictureComments.textContent = this.data.comments;
 
-  var image = that.element.querySelector('img');
-  var newImage = new Image();
-  newImage.src = that.data.url;
+  var image = this.element.querySelector('img');
 
-  newImage.onload = function(evt) {
-    clearTimeout(that.imageLoadTimeout);
-    image.width = '182';
-    image.height = '182';
-    image.src = evt.target.src;
+  this.load = function() {
+    var newImage = new Image();
+    newImage.src = that.data.url;
+
+    newImage.onload = function(evt) {
+      clearTimeout(imageLoadTimeout);
+      image.width = '182';
+      image.height = '182';
+      image.src = evt.target.src;
+    };
+
+    newImage.onerror = function() {
+      that.element.classList.add('picture-load-failure');
+    };
+
+    var IMAGE_LOAD_TIMEOUT = 10000;
+
+    var imageLoadTimeout = setTimeout(function() {
+      image.src = '';
+      that.element.classList.add('picture-load-failure');
+    }, IMAGE_LOAD_TIMEOUT);
+
+    that.element.onclick = function(event) {
+      event.preventDefault();
+      gallery.show(index);
+    };
   };
 
-  newImage.onerror = function() {
-    that.element.classList.add('picture-load-failure');
-  };
-
-  var IMAGE_LOAD_TIMEOUT = 10000;
-
-  that.imageLoadTimeout = setTimeout(function() {
-    image.src = '';
-    that.element.classList.add('picture-load-failure');
-  }, IMAGE_LOAD_TIMEOUT);
-
-  that.element.onclick = function(event) {
-    event.preventDefault();
-    gallery.show(index);
-  };
+  this.load();
 
   Picture.prototype.remove = function() {
     that.element.onclick = null;
