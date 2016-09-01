@@ -12,18 +12,21 @@ if ('content' in templateElement) {
 }
 
 var Picture = function(response, index) {
+
   var that = this;
   this.element = elementToClone.cloneNode(true);
-  this.data = response;
-  var pictureLikes = this.element.querySelector('.picture-likes');
-  var pictureComments = this.element.querySelector('.picture-comments');
-
-  pictureLikes.textContent = this.data.likes;
-  pictureComments.textContent = this.data.comments;
-
   var image = this.element.querySelector('img');
 
-  this.load = function() {
+  Picture.prototype.setup = function() {
+    this.data = response;
+    var pictureLikes = this.element.querySelector('.picture-likes');
+    var pictureComments = this.element.querySelector('.picture-comments');
+
+    pictureLikes.textContent = this.data.likes;
+    pictureComments.textContent = this.data.comments;
+  };
+
+  Picture.prototype.load = function() {
     var newImage = new Image();
 
     newImage.onload = function(evt) {
@@ -37,11 +40,6 @@ var Picture = function(response, index) {
       that.element.classList.add('picture-load-failure');
     };
 
-    that.element.onclick = function(event) {
-      event.preventDefault();
-      gallery.show(index);
-    };
-
     newImage.src = that.data.url;
 
     var IMAGE_LOAD_TIMEOUT = 10000;
@@ -52,7 +50,13 @@ var Picture = function(response, index) {
     }, IMAGE_LOAD_TIMEOUT);
   };
 
+  this.setup();
   this.load();
+
+  that.element.onclick = function(event) {
+    event.preventDefault();
+    gallery.show(index);
+  };
 
   Picture.prototype.remove = function() {
     that.element.onclick = null;
