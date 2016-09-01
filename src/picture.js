@@ -25,7 +25,6 @@ var Picture = function(response, index) {
 
   this.load = function() {
     var newImage = new Image();
-    newImage.src = that.data.url;
 
     newImage.onload = function(evt) {
       clearTimeout(imageLoadTimeout);
@@ -38,17 +37,19 @@ var Picture = function(response, index) {
       that.element.classList.add('picture-load-failure');
     };
 
+    that.element.onclick = function(event) {
+      event.preventDefault();
+      gallery.show(index);
+    };
+
+    newImage.src = that.data.url;
+
     var IMAGE_LOAD_TIMEOUT = 10000;
 
     var imageLoadTimeout = setTimeout(function() {
       image.src = '';
       that.element.classList.add('picture-load-failure');
     }, IMAGE_LOAD_TIMEOUT);
-
-    that.element.onclick = function(event) {
-      event.preventDefault();
-      gallery.show(index);
-    };
   };
 
   this.load();
