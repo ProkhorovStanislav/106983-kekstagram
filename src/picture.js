@@ -11,27 +11,19 @@ if ('content' in templateElement) {
 }
 
 var Picture = function(response, index) {
-  var that = this;
   this.element = elementToClone.cloneNode(true);
-  var image = this.element.querySelector('img');
+  this.data = response;
 
-  this.setup(response);
-  this.load(image, that);
+  this.setup();
+  this.load();
 
-  that.element.onclick = function(event) {
+  this.element.onclick = function(event) {
     event.preventDefault();
     gallery.show(index);
   };
-
-  Picture.prototype.remove = function() {
-    that.element.onclick = null;
-  };
 };
 
-Picture.prototype = {};
-
-Picture.prototype.setup = function(response) {
-  this.data = response;
+Picture.prototype.setup = function() {
   var pictureLikes = this.element.querySelector('.picture-likes');
   var pictureComments = this.element.querySelector('.picture-comments');
 
@@ -39,8 +31,10 @@ Picture.prototype.setup = function(response) {
   pictureComments.textContent = this.data.comments;
 };
 
-Picture.prototype.load = function(image, that) {
+Picture.prototype.load = function() {
   var newImage = new Image();
+  var image = this.element.querySelector('img');
+  var that = this;
 
   newImage.onload = function(evt) {
     clearTimeout(imageLoadTimeout);
@@ -61,6 +55,10 @@ Picture.prototype.load = function(image, that) {
     image.src = '';
     that.element.classList.add('picture-load-failure');
   }, IMAGE_LOAD_TIMEOUT);
+};
+
+Picture.prototype.remove = function() {
+  this.element.onclick = null;
 };
 
 module.exports = Picture;
