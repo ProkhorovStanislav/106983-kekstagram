@@ -13,14 +13,10 @@ if ('content' in templateElement) {
 var Picture = function(response, index) {
   this.element = elementToClone.cloneNode(true);
   this.data = response;
+  this.index = index;
 
   this.setup();
   this.load();
-
-  this.element.onclick = function(event) {
-    event.preventDefault();
-    gallery.show(index);
-  };
 };
 
 Picture.prototype.setup = function() {
@@ -55,6 +51,11 @@ Picture.prototype.load = function() {
     image.src = '';
     that.element.classList.add('picture-load-failure');
   }, IMAGE_LOAD_TIMEOUT);
+
+  this.element.onclick = function(event) {
+    event.preventDefault();
+    gallery.show(that.index);
+  };
 };
 
 Picture.prototype.remove = function() {
