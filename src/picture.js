@@ -22,6 +22,12 @@ var Picture = function(response, index) {
 Picture.prototype.setup = function() {
   var pictureLikes = this.element.querySelector('.picture-likes');
   var pictureComments = this.element.querySelector('.picture-comments');
+  var that = this;
+
+  this.element.onclick = function(event) {
+    event.preventDefault();
+    gallery.show(that.index);
+  };
 
   pictureLikes.textContent = this.data.likes;
   pictureComments.textContent = this.data.comments;
@@ -51,11 +57,6 @@ Picture.prototype.load = function() {
     image.src = '';
     that.element.classList.add('picture-load-failure');
   }, IMAGE_LOAD_TIMEOUT);
-
-  this.element.onclick = function(event) {
-    event.preventDefault();
-    gallery.show(that.index);
-  };
 };
 
 Picture.prototype.remove = function() {
