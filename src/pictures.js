@@ -23,12 +23,12 @@
 
   var picturesChange = function() {
     clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(function(){
+    scrollTimeout = setTimeout(function() {
       if (isBottomReached()) {
         pageNumber += 1;
-        loadPicturesNextPage(pageNumber);
+        loadPicturesNextPage();
       }
-    }, 100)
+    }, 100);
   };
 
   var loadPicturesCallback = function(response) {

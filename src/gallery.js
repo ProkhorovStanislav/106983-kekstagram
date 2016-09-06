@@ -12,7 +12,10 @@
   };
 
   Gallery.prototype.setPictures = function(pictures) {
-    this.pictures = pictures;
+    var pics = this.pictures;
+    pictures.forEach(function(item) {
+      pics.push(item);
+    });
   };
 
   Gallery.prototype.show = function(index) {
@@ -24,7 +27,7 @@
 
     this.galleryOverlay.onclick = function() {
       var indexNext = that.activePicture + 1;
-      if (indexNext > that.pictures.length) {
+      if (indexNext >= that.pictures.length) {
         indexNext = 0;
       }
       that.setActivePicture(indexNext);
