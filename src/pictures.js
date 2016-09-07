@@ -41,7 +41,8 @@
       picturesContainer.appendChild(createPicture.element);
     });
 
-    gallery.setPictures(response);
+    gallery.addPictures(response);
+    filtersBlock.classList.remove('hidden');
   };
 
   load(dataUrl, {from: pageNumber, to: PAGESIZE}, loadPicturesCallback);

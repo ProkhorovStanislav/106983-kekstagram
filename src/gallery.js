@@ -11,7 +11,7 @@
     this.galleryOverlayComments = document.querySelector('.comments-count');
   };
 
-  Gallery.prototype.setPictures = function(pictures) {
+  Gallery.prototype.addPictures = function(pictures) {
     var pics = this.pictures;
     pictures.forEach(function(item) {
       pics.push(item);
