@@ -8,6 +8,7 @@
   var filtersBlock = document.querySelector('.filters');
   var pageNumber = 0;
   var PAGESIZE = 12;
+  var lastIndex = 0;
   var dataUrl = 'http://localhost:1506/api/pictures';
   var scrollTimeout;
 
@@ -37,19 +38,25 @@
     }
 
     response.forEach(function(picture, index) {
-      var createPicture = new Picture(picture, index);
+      var createPicture = new Picture(picture, index, lastIndex);
       picturesContainer.appendChild(createPicture.element);
     });
 
     gallery.addPictures(response);
     filtersBlock.classList.remove('hidden');
+    lastIndex += response.length;
   };
 
   load(dataUrl, {from: pageNumber, to: PAGESIZE}, loadPicturesCallback);
 
   filtersBlock.addEventListener('change', function(evt) {
     if (event.target.tagName.toLowerCase() === 'input') {
+      while (picturesContainer.firstChild) {
+        picturesContainer.removeChild(picturesContainer.firstChild);
+      }
       pageNumber = 0;
+      lastIndex = 0;
+      gallery.pictures = [];
       var elementValue = evt.target.value;
       load(dataUrl, {from: pageNumber, to: PAGESIZE, filter: elementValue}, loadPicturesCallback);
     }
