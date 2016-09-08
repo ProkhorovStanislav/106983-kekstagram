@@ -14,7 +14,6 @@ var Picture = function(response, index, lastIndex) {
   this.element = elementToClone.cloneNode(true);
   this.data = response;
   this.index = lastIndex + index;
-  console.log(this.index);
 
   this.setup();
   this.load();

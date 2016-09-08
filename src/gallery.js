@@ -44,7 +44,6 @@
   };
 
   Gallery.prototype.setActivePicture = function(index) {
-
     this.activePicture = index;
     var currentPicture = this.pictures[this.activePicture];
     this.galleryOverlayImage.src = currentPicture.url;
