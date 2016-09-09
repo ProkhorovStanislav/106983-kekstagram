@@ -11,6 +11,7 @@
   var pictureIndex = 0;
   var dataUrl = 'http://localhost:1506/api/pictures';
   var scrollTimeout;
+  var clientHeight = document.documentElement.clientHeight;
 
   var loadPicturesNextPage = function() {
     pageNumber++;
@@ -20,7 +21,7 @@
   var isBottomReached = function() {
     var lastImage = picturesContainer.querySelector('.picture:last-child');
     var positionImage = lastImage.getBoundingClientRect();
-    return positionImage.top - document.documentElement.clientHeight - 100 <= 0;
+    return positionImage.top - clientHeight - 100 <= 0;
   };
 
   var picturesChange = function() {
@@ -32,6 +33,10 @@
     }, 100);
   };
 
+  var isNextPageAvailable = function(response) {
+    return pageNumber < Math.floor(response.length / PAGESIZE);
+  };
+
   var loadPicturesCallback = function(response) {
 
     response.forEach(function(picture) {
@@ -41,7 +46,8 @@
     });
     gallery.addPictures(response);
 
-    if (picturesContainer.querySelector('.picture:last-child').getBoundingClientRect().bottom <= document.documentElement.clientHeight + 200) {
+    if (isBottomReached() && isNextPageAvailable(response)) {
+
       loadPicturesNextPage();
     }
 
