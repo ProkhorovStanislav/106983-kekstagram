@@ -11,8 +11,11 @@
     this.galleryOverlayComments = document.querySelector('.comments-count');
   };
 
-  Gallery.prototype.setPictures = function(pictures) {
-    this.pictures = pictures;
+  Gallery.prototype.addPictures = function(pictures) {
+    var pics = this.pictures;
+    pictures.forEach(function(item) {
+      pics.push(item);
+    });
   };
 
   Gallery.prototype.show = function(index) {
@@ -24,7 +27,7 @@
 
     this.galleryOverlay.onclick = function() {
       var indexNext = that.activePicture + 1;
-      if (indexNext > that.pictures.length) {
+      if (indexNext >= that.pictures.length) {
         indexNext = 0;
       }
       that.setActivePicture(indexNext);
@@ -41,7 +44,6 @@
   };
 
   Gallery.prototype.setActivePicture = function(index) {
-
     this.activePicture = index;
     var currentPicture = this.pictures[this.activePicture];
     this.galleryOverlayImage.src = currentPicture.url;

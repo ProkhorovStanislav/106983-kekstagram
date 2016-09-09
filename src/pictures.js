@@ -4,20 +4,70 @@
   var Picture = require('./picture');
   var gallery = require('./gallery');
   var load = require('./load');
-  var pictures = [];
   var picturesContainer = document.querySelector('.pictures');
   var filtersBlock = document.querySelector('.filters');
+  var pageNumber = 0;
+  var PAGESIZE = 12;
+  var pictureIndex = 0;
+  var dataUrl = 'http://localhost:1506/api/pictures';
+  var scrollTimeout;
+  var clientHeight = document.documentElement.clientHeight;
 
-  filtersBlock.classList.add('hidden');
-
-  load('http://localhost:1506/api/pictures', 'loadPicturesCallback');
-
-  window.loadPicturesCallback = function(response) {
-    pictures = response;
-    pictures.forEach(function(picture, index) {
-      var createPicture = new Picture(picture, index);
-      picturesContainer.appendChild(createPicture.element);
-    });
-    gallery.setPictures(pictures);
+  var loadPicturesNextPage = function() {
+    pageNumber++;
+    load(dataUrl, {from: pageNumber * PAGESIZE, to: pageNumber * PAGESIZE + PAGESIZE}, loadPicturesCallback);
   };
+
+  var isBottomReached = function() {
+    var lastImage = picturesContainer.querySelector('.picture:last-child');
+    var positionImage = lastImage.getBoundingClientRect();
+    return positionImage.top - clientHeight - 100 <= 0;
+  };
+
+  var picturesChange = function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
+      if (isBottomReached()) {
+        loadPicturesNextPage();
+      }
+    }, 100);
+  };
+
+  var isNextPageAvailable = function(response) {
+    return pageNumber < Math.floor(response.length / PAGESIZE);
+  };
+
+  var loadPicturesCallback = function(response) {
+
+    response.forEach(function(picture) {
+      var createPicture = new Picture(picture, pictureIndex);
+      picturesContainer.appendChild(createPicture.element);
+      pictureIndex++;
+    });
+    gallery.addPictures(response);
+
+    if (isBottomReached() && isNextPageAvailable(response)) {
+
+      loadPicturesNextPage();
+    }
+
+    filtersBlock.classList.remove('hidden');
+  };
+
+  load(dataUrl, {from: pageNumber, to: PAGESIZE}, loadPicturesCallback);
+
+  filtersBlock.addEventListener('change', function(evt) {
+    if (event.target.tagName.toLowerCase() === 'input') {
+      while (picturesContainer.firstChild) {
+        picturesContainer.removeChild(picturesContainer.firstChild);
+      }
+      pageNumber = 0;
+      pictureIndex = 0;
+      gallery.pictures = [];
+      var elementValue = evt.target.id;
+      load(dataUrl, {from: pageNumber, to: PAGESIZE, filter: elementValue}, loadPicturesCallback);
+    }
+  }, true);
+
+  window.addEventListener('scroll', picturesChange);
 })();
