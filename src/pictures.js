@@ -8,11 +8,12 @@
   var filtersBlock = document.querySelector('.filters');
   var pageNumber = 0;
   var PAGESIZE = 12;
-  var lastIndex = 0;
+  var pictureIndex = 0;
   var dataUrl = 'http://localhost:1506/api/pictures';
   var scrollTimeout;
 
   var loadPicturesNextPage = function() {
+    pageNumber++;
     load(dataUrl, {from: pageNumber * PAGESIZE, to: pageNumber * PAGESIZE + PAGESIZE}, loadPicturesCallback);
   };
 
@@ -26,25 +27,25 @@
     clearTimeout(scrollTimeout);
     scrollTimeout = setTimeout(function() {
       if (isBottomReached()) {
-        pageNumber += 1;
         loadPicturesNextPage();
       }
     }, 100);
   };
 
   var loadPicturesCallback = function(response) {
-    if (pageNumber === 0) {
-      picturesContainer.innerHTML = '';
+
+    response.forEach(function(picture) {
+      var createPicture = new Picture(picture, pictureIndex);
+      picturesContainer.appendChild(createPicture.element);
+      pictureIndex++;
+    });
+    gallery.addPictures(response);
+
+    if (picturesContainer.querySelector('.picture:last-child').getBoundingClientRect().bottom <= document.documentElement.clientHeight + 200) {
+      loadPicturesNextPage();
     }
 
-    response.forEach(function(picture, index) {
-      var createPicture = new Picture(picture, index, lastIndex);
-      picturesContainer.appendChild(createPicture.element);
-    });
-
-    gallery.addPictures(response);
     filtersBlock.classList.remove('hidden');
-    lastIndex += response.length;
   };
 
   load(dataUrl, {from: pageNumber, to: PAGESIZE}, loadPicturesCallback);
@@ -55,9 +56,9 @@
         picturesContainer.removeChild(picturesContainer.firstChild);
       }
       pageNumber = 0;
-      lastIndex = 0;
+      pictureIndex = 0;
       gallery.pictures = [];
-      var elementValue = evt.target.value;
+      var elementValue = evt.target.id;
       load(dataUrl, {from: pageNumber, to: PAGESIZE, filter: elementValue}, loadPicturesCallback);
     }
   }, true);

@@ -10,10 +10,10 @@ if ('content' in templateElement) {
   elementToClone = templateElement.querySelector('.picture');
 }
 
-var Picture = function(response, index, lastIndex) {
+var Picture = function(response, index) {
   this.element = elementToClone.cloneNode(true);
   this.data = response;
-  this.index = lastIndex + index;
+  this.index = index;
 
   this.setup();
   this.load();

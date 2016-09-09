@@ -3,7 +3,12 @@
 module.exports = function(list, filterID) {
   var filteredList = [];
   switch (filterID) {
-    case 'new':
+
+    case 'filter-popular':
+      filteredList = list;
+      break;
+
+    case 'filter-new':
       filteredList = list.filter(function(item) {
         var threeDaysAgoDate = new Date();
         threeDaysAgoDate.setDate(threeDaysAgoDate.getDate() - 3);
@@ -13,16 +18,14 @@ module.exports = function(list, filterID) {
       });
       break;
 
-    case 'discussed':
+    case 'filter-discussed':
       filteredList = list.sort(function(a, b) {
           return b['comments'] - a['comments'];
         });
       break;
 
     default:
-      filteredList = list.sort(function(a, b) {
-          return b['likes'] - a['likes'];
-        });
+      filteredList = list;
       break;
   }
   return filteredList;
