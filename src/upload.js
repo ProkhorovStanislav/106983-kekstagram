@@ -76,14 +76,54 @@ module.exports = function() {
   var inputY = resizeForm.querySelector('#resize-y');
   var inputSide = resizeForm.querySelector('#resize-size');
   var buttonSubmit = resizeForm.querySelector('#resize-fwd');
-
+  var resizeControls = document.querySelector('.upload-resize-controls');
   var inputs = document.querySelectorAll('.upload-resize-control');
 
   inputs.forEach(function(item) {
-    item.oninput = function() {
+    item.addEventListener('input', function() {
       resizeFormIsValid();
-    };
+    });
   });
+
+  /**
+   * Отправка в форму значений по-умолчанию смещения и размера кадра,
+   * рассчитанных согласно размерам загружаемого изображения
+   */
+  function toAdjustResizer() {
+    inputX.value = parseInt(currentResizer.getConstraint().x, 10);
+    inputY.value = parseInt(currentResizer.getConstraint().y, 10);
+    inputSide.value = parseInt(currentResizer.getConstraint().side, 10);
+  }
+  window.addEventListener('resizerchange', toAdjustResizer);
+
+
+// Обновление объекта Resizer при изменении значений формы
+  function updateResizer(e) {
+    if (e.target.classList.contains('upload-resize-control')) {
+      syncResizerWithForm();
+      setValue();
+    }
+  }
+
+  function syncResizerWithForm() {
+    currentResizer.setConstraint(parseInt(inputX.value, 10), parseInt(inputY.value, 10), parseInt(inputSide.value, 10));
+  }
+
+// Изначальные значения полей из Resizer
+  function setValue() {
+    var inputSideValue = inputSide.value;
+    if (inputSideValue < 0) {
+      inputSideValue = 0;
+    }
+
+    inputX.max = currentResizer._image.naturalWidth - inputSideValue;
+    inputY.max = currentResizer._image.naturalHeight - inputSideValue;
+    inputX.min = 0;
+    inputY.min = 0;
+    inputSide.max = Math.min(currentResizer._image.naturalWidth, currentResizer._image.naturalHeight);
+  }
+
+  resizeControls.addEventListener('input', updateResizer, true);
 
   // Метод для проверки устанавливаемых начальных координат обрезанного изображения на неотрицательность
   function isPositiveNumber(val) {
@@ -180,7 +220,7 @@ module.exports = function() {
    * и показывается форма кадрирования.
    * @param {Event} evt
    */
-  uploadForm.onchange = function(evt) {
+  uploadForm.addEventListener('change', function(evt) {
     var element = evt.target;
     if (element.id === 'upload-file') {
       // Проверка типа загружаемого файла, тип должен быть изображением
@@ -190,7 +230,7 @@ module.exports = function() {
 
         showMessage(Action.UPLOADING);
 
-        fileReader.onload = function() {
+        fileReader.addEventListener('load', function() {
           cleanupResizer();
 
           currentResizer = new Resizer(fileReader.result);
@@ -201,7 +241,7 @@ module.exports = function() {
           resizeForm.classList.remove('invisible');
 
           hideMessage();
-        };
+        });
 
         fileReader.readAsDataURL(element.files[0]);
       } else {
@@ -209,14 +249,14 @@ module.exports = function() {
         showMessage(Action.ERROR);
       }
     }
-  };
+  });
 
   /**
    * Обработка сброса формы кадрирования. Возвращает в начальное состояние
    * и обновляет фон.
    * @param {Event} evt
    */
-  resizeForm.onreset = function(evt) {
+  resizeForm.addEventListener('reset', function(evt) {
     evt.preventDefault();
 
     cleanupResizer();
@@ -224,14 +264,14 @@ module.exports = function() {
 
     resizeForm.classList.add('invisible');
     uploadForm.classList.remove('invisible');
-  };
+  });
 
   /**
    * Обработка отправки формы кадрирования. Если форма валидна, экспортирует
    * кропнутое изображение в форму добавления фильтра и показывает ее.
    * @param {Event} evt
    */
-  resizeForm.onsubmit = function(evt) {
+  resizeForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
 
     if (resizeFormIsValid()) {
@@ -246,18 +286,18 @@ module.exports = function() {
       resizeForm.classList.add('invisible');
       filterForm.classList.remove('invisible');
     }
-  };
+  });
 
   /**
    * Сброс формы фильтра. Показывает форму кадрирования.
    * @param {Event} evt
    */
-  filterForm.onreset = function(evt) {
+  filterForm.addEventListener('reset', function(evt) {
     evt.preventDefault();
 
     filterForm.classList.add('invisible');
     resizeForm.classList.remove('invisible');
-  };
+  });
 
   // Рассчитываем срок хранения cookie исходя из текущей даты
   function toGetCookieLifeTime() {
@@ -283,7 +323,7 @@ module.exports = function() {
    * записав сохраненный фильтр в cookie.
    * @param {Event} evt
    */
-  filterForm.onsubmit = function(evt) {
+  filterForm.addEventListener('submit', function(evt) {
     evt.preventDefault();
 
     filterForm.classList.add('invisible');
@@ -295,7 +335,7 @@ module.exports = function() {
 
     cleanupResizer();
     updateBackground();
-  };
+  });
 
   var filters = {
     'none': filterForm.querySelector('#upload-filter-none'),
@@ -344,8 +384,9 @@ module.exports = function() {
   }
 
   toCheckFilter();
-  filterForm.onchange = toCheckFilter;
+  filterForm.addEventListener('change', toCheckFilter);
 
   cleanupResizer();
   updateBackground();
 };
+
