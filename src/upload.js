@@ -123,7 +123,7 @@ module.exports = function() {
     inputSide.max = Math.min(currentResizer._image.naturalWidth, currentResizer._image.naturalHeight);
   }
 
-  resizeControls.addEventListener('change', updateResizer, true);
+  resizeControls.addEventListener('input', updateResizer, true);
 
   // Метод для проверки устанавливаемых начальных координат обрезанного изображения на неотрицательность
   function isPositiveNumber(val) {
