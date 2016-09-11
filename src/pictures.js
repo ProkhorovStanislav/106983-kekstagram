@@ -12,6 +12,8 @@
   var dataUrl = 'http://localhost:1506/api/pictures';
   var scrollTimeout;
   var clientHeight = document.documentElement.clientHeight;
+  var defaultFilter = 'filter-popular';
+  var activeFilter = localStorage.getItem('ActiveFilter');
 
   var loadPicturesNextPage = function() {
     pageNumber++;
@@ -65,9 +67,21 @@
       pictureIndex = 0;
       gallery.pictures = [];
       var elementValue = evt.target.id;
+      localStorage.setItem('ActiveFilter', elementValue);
       load(dataUrl, {from: pageNumber, to: PAGESIZE, filter: elementValue}, loadPicturesCallback);
     }
   }, true);
+
+  function toSetActiveFilter() {
+    if (activeFilter !== null) {
+      console.log(activeFilter);
+      document.getElementById(activeFilter).checked = true;
+    } else {
+      document.getElementById(defaultFilter).checked = true;
+    }
+  }
+
+  window.addEventListener('load', toSetActiveFilter);
 
   window.addEventListener('scroll', picturesChange);
 })();
