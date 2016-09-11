@@ -13,7 +13,8 @@
   var scrollTimeout;
   var clientHeight = document.documentElement.clientHeight;
   var defaultFilter = 'filter-popular';
-  var activeFilter = localStorage.getItem('ActiveFilter');
+  var activeFilterKeyName = 'ActiveFilter';
+  var activeFilter = localStorage.getItem(activeFilterKeyName);
 
   var loadPicturesNextPage = function() {
     pageNumber++;
@@ -67,7 +68,7 @@
       pictureIndex = 0;
       gallery.pictures = [];
       var elementValue = evt.target.id;
-      localStorage.setItem('ActiveFilter', elementValue);
+      localStorage.setItem(activeFilterKeyName, elementValue);
       load(dataUrl, {from: pageNumber, to: PAGESIZE, filter: elementValue}, loadPicturesCallback);
     }
   }, true);
