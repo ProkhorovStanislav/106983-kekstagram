@@ -20,9 +20,7 @@
 
   Gallery.prototype.show = function(index) {
 
-    this.galleryOverlayClose.onclick = function() {
-      this.hide();
-    }.bind(this);
+    this.galleryOverlayClose.onclick = this.hide.bind(this);
 
     this.galleryOverlay.onclick = function() {
       var indexNext = this.activePicture + 1;
