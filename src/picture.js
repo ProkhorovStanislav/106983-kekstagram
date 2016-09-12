@@ -22,12 +22,11 @@ var Picture = function(response, index) {
 Picture.prototype.setup = function() {
   var pictureLikes = this.element.querySelector('.picture-likes');
   var pictureComments = this.element.querySelector('.picture-comments');
-  var that = this;
 
   this.element.onclick = function(event) {
     event.preventDefault();
-    gallery.show(that.index);
-  };
+    gallery.show(this.index);
+  }.bind(this);
 
   pictureLikes.textContent = this.data.likes;
   pictureComments.textContent = this.data.comments;
@@ -36,7 +35,6 @@ Picture.prototype.setup = function() {
 Picture.prototype.load = function() {
   var newImage = new Image();
   var image = this.element.querySelector('img');
-  var that = this;
 
   newImage.onload = function(evt) {
     clearTimeout(imageLoadTimeout);
@@ -46,8 +44,8 @@ Picture.prototype.load = function() {
   };
 
   newImage.onerror = function() {
-    that.element.classList.add('picture-load-failure');
-  };
+    this.element.classList.add('picture-load-failure');
+  }.bind(this);
 
   newImage.src = this.data.url;
 
@@ -55,8 +53,8 @@ Picture.prototype.load = function() {
 
   var imageLoadTimeout = setTimeout(function() {
     image.src = '';
-    that.element.classList.add('picture-load-failure');
-  }, IMAGE_LOAD_TIMEOUT);
+    this.element.classList.add('picture-load-failure');
+  }.bind(this), IMAGE_LOAD_TIMEOUT);
 };
 
 Picture.prototype.remove = function() {
