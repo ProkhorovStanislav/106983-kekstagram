@@ -75,7 +75,6 @@
 
   function toSetActiveFilter() {
     if (activeFilter !== null) {
-      console.log(activeFilter);
       document.getElementById(activeFilter).checked = true;
     } else {
       document.getElementById(defaultFilter).checked = true;

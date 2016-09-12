@@ -19,22 +19,19 @@
   };
 
   Gallery.prototype.show = function(index) {
-    var that = this;
 
-    this.galleryOverlayClose.onclick = function() {
-      that.hide();
-    };
+    this.galleryOverlayClose.onclick = this.hide.bind(this);
 
     this.galleryOverlay.onclick = function() {
-      var indexNext = that.activePicture + 1;
-      if (indexNext >= that.pictures.length) {
+      var indexNext = this.activePicture + 1;
+      if (indexNext >= this.pictures.length) {
         indexNext = 0;
       }
-      that.setActivePicture(indexNext);
-    };
+      this.setActivePicture(indexNext);
+    }.bind(this);
 
     this.galleryOverlay.classList.remove('invisible');
-    that.setActivePicture(index);
+    this.setActivePicture(index);
   };
 
   Gallery.prototype.hide = function() {
