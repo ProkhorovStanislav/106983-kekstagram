@@ -136,7 +136,7 @@ module.exports = function() {
       this._ctx.textAlign = 'center';
       this._ctx.font = '20px Arial';
       this._ctx.fillStyle = '#fff';
-      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 9);
+      this._ctx.fillText(this._image.naturalWidth + ' x ' + this._image.naturalHeight, 0, -this._container.height * 0.75 / 2 - 15);
 
       document.body.appendChild(this.getMyCanvas());
 
@@ -149,80 +149,86 @@ module.exports = function() {
       this._ctx.restore();
     },
 
-    // Отрисовывание рамки из точек. Для отрисовки каждой стороны вызывается функция с соответствующими параметрами
+    // Отрисовывание рамки из зигзагов. Для отрисовки каждой стороны вызывается функция с соответствующими параметрами
     getMyCanvas: function() {
       var borderElem = document.createElement('canvas');
-      var dotSize = 2;
+      // Отрисовывка верхней стороны зигзагами
+      this.zigzagDrawLine(
+        -this._resizeConstraint.side / 2 + this._ctx.lineWidth / 2,
+        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 2,
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2,
+        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 2);
+      // Отрисовка правой стороны зигзагами
+      this.zigzagDrawLine(
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 - 2,
+        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 10,
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 - 2,
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 10);
 
-      this.drawBorder(
-        -this._resizeConstraint.side / 2 - dotSize,
-        -this._resizeConstraint.side / 2 - dotSize * 3,
-        this._resizeConstraint.side / 2,
-        -this._resizeConstraint.side / 2 - dotSize * 3,
-        dotSize);
+      // Отрисовка нижней стороны зигзагами
+      this.zigzagDrawLine(
+        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 4,
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 4,
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 4,
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 4);
 
-      this.drawBorder(
-        -this._resizeConstraint.side / 2 - dotSize,
-        -this._resizeConstraint.side / 2 - dotSize * 2,
-        -this._resizeConstraint.side / 2 - dotSize,
-        this._resizeConstraint.side / 2,
-        dotSize);
+      // Отрисовка левой стороны зигзагами
+      this.zigzagDrawLine(
+        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 - 6,
+        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 12,
+        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 - 6,
+        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 12);
 
-      this.drawBorder(
-        this._resizeConstraint.side / 2,
-        -this._resizeConstraint.side / 2 - dotSize * 2,
-        this._resizeConstraint.side / 2,
-        this._resizeConstraint.side / 2,
-        dotSize);
-
-      this.drawBorder(
-        -this._resizeConstraint.side / 2,
-        this._resizeConstraint.side / 2 - dotSize * 2,
-        this._resizeConstraint.side / 2,
-        this._resizeConstraint.side / 2 - dotSize * 2,
-        dotSize);
 
       return borderElem;
     },
 
-    /**
-     * Отрисовывание единичного кружка - элемента кастомной рамки, обозначающей область изображения после кадрирования. Координаты задаются от центра.
-     */
-    drawDot: function(ctx, size, x, y) {
-      this._ctx.beginPath();
-      this._ctx.arc(x, y, size, 0, Math.PI * 2, false);
-      this._ctx.fillStyle = '#ffe753';
-      this._ctx.fill();
+
+    // Отрисовка линии зигзагами по горизонтали или вертикали, в зависимости от переданных координат
+    zigzagDrawLine: function(zigzagXStart, zigzagYStart, zigzagXEnd, zigzagYEnd) {
+      var x;
+      var y;
+      if (zigzagYStart === zigzagYEnd) {
+        x = 0 + zigzagXStart;
+        y = 0 + zigzagYStart;
+        while (x < zigzagXEnd + 6) {
+          this.zigzagDrawHorizontal(x, y);
+          x += 24;
+        }
+      }
+
+      if (zigzagXStart === zigzagXEnd) {
+        x = 0 + zigzagXStart;
+        y = 0 + zigzagYStart;
+        while (y < zigzagYEnd + 6) {
+          this.zigzagDrawVertical(x, y);
+          y += 24;
+        }
+      }
     },
 
-    /**
-     * Функция отрисовки рамки получает 4 параметра
-     * @param x - начальная координата линии по оси X
-     * @param y - начальная координата линии по оси Y
-     * @param m - конечная координата линии по оси X
-     * @param n - конечная координата линии по оси Y
-     * @param dotSize - радиус точки, элемента рамки
-     * Сравнивая переданные параметры попарно, функция рисует либо горизонтальную либо вертикальную сторону рамки
-     */
-    drawBorder: function(x, y, m, n, dotSize) {
-      if (x !== m && y !== n || x === m && y === n || x > m || y > n) {
-        console.log('the parameters passed to the function are incorrect');
-        return;
-      }
+    // Отрисовка единичного зигзага по горизонтали
+    zigzagDrawHorizontal: function(zigzagXStart, zigzagYStart) {
+      this._ctx.strokeStyle = '#ffe753';
+      this._ctx.lineWidth = 3;
+      this._ctx.setLineDash([15, 0]);
+      this._ctx.beginPath();
+      this._ctx.moveTo(zigzagXStart - 12, zigzagYStart );
+      this._ctx.lineTo(zigzagXStart, zigzagYStart - 12);
+      this._ctx.lineTo(zigzagXStart + 12, zigzagYStart );
+      this._ctx.stroke();
+    },
 
-      if (y === n) {
-        while (x < m) {
-          this.drawDot(this._ctx, dotSize, x, y);
-          x += dotSize * 3;
-        }
-      }
-
-      if (x === m) {
-        while (y < n) {
-          this.drawDot(this._ctx, dotSize, x, y);
-          y += dotSize * 3;
-        }
-      }
+    // Отрисовка единичного зигзага по вертикали
+    zigzagDrawVertical: function(zigzagXStart, zigzagYStart) {
+      this._ctx.strokeStyle = '#ffe753';
+      this._ctx.lineWidth = 3;
+      this._ctx.setLineDash([15, 0]);
+      this._ctx.beginPath();
+      this._ctx.moveTo(zigzagXStart - 2, zigzagYStart - 12);
+      this._ctx.lineTo(zigzagXStart + 10, zigzagYStart );
+      this._ctx.lineTo(zigzagXStart - 2, zigzagYStart + 12);
+      this._ctx.stroke();
     },
 
     /**
