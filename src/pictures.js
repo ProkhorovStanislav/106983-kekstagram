@@ -28,13 +28,19 @@
   };
 
   var picturesChange = function() {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(function() {
-      if (isBottomReached()) {
-        loadPicturesNextPage();
-      }
-    }, 100);
+    if (isBottomReached()) {
+      loadPicturesNextPage();
+    }
   };
+
+  function throttle(func, timeout) {
+    return function() {
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(function() {
+        func();
+      }, timeout);
+    };
+  }
 
   var isNextPageAvailable = function(response) {
     return pageNumber < Math.floor(response.length / PAGESIZE);
@@ -83,5 +89,5 @@
 
   window.addEventListener('load', toSetActiveFilter);
 
-  window.addEventListener('scroll', picturesChange);
+  window.addEventListener('scroll', throttle(picturesChange, 100));
 })();
