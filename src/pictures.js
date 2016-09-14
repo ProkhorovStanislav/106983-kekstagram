@@ -4,13 +4,13 @@
   var Picture = require('./picture');
   var gallery = require('./gallery');
   var load = require('./load');
+  var utilities = require('./utilities');
   var picturesContainer = document.querySelector('.pictures');
   var filtersBlock = document.querySelector('.filters');
   var pageNumber = 0;
   var PAGESIZE = 12;
   var pictureIndex = 0;
   var dataUrl = 'http://localhost:1506/api/pictures';
-  var scrollTimeout;
   var clientHeight = document.documentElement.clientHeight;
   var defaultFilter = 'filter-popular';
   var activeFilterKeyName = 'ActiveFilter';
@@ -28,12 +28,9 @@
   };
 
   var picturesChange = function() {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(function() {
-      if (isBottomReached()) {
-        loadPicturesNextPage();
-      }
-    }, 100);
+    if (isBottomReached()) {
+      loadPicturesNextPage();
+    }
   };
 
   var isNextPageAvailable = function(response) {
@@ -82,6 +79,5 @@
   }
 
   window.addEventListener('load', toSetActiveFilter);
-
-  window.addEventListener('scroll', picturesChange);
+  window.addEventListener('scroll', utilities.throttle(picturesChange, 100));
 })();

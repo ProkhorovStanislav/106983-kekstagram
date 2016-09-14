@@ -90,6 +90,7 @@ module.exports = function() {
 
       // Толщина линии.
       this._ctx.lineWidth = 6;
+
       // Цвет обводки.
       this._ctx.strokeStyle = '#ffe753';
       // Размер штрихов. Первый элемент массива задает длину штриха, второй
@@ -153,32 +154,33 @@ module.exports = function() {
     getMyCanvas: function() {
       var borderElem = document.createElement('canvas');
       var sideSize = this._resizeConstraint.side;
+      var lineWidth = this._ctx.lineWidth;
       // Отрисовывка верхней стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 + this._ctx.lineWidth / 2,
-        -sideSize / 2 - this._ctx.lineWidth / 2 + 2,
-        sideSize / 2 - this._ctx.lineWidth / 2,
-        -sideSize / 2 - this._ctx.lineWidth / 2 + 2);
+        -sideSize / 2 + lineWidth / 2,
+        -sideSize / 2 - lineWidth / 2 + 2,
+        sideSize / 2 - lineWidth / 2,
+        -sideSize / 2 - lineWidth / 2 + 2);
       // Отрисовка правой стороны зигзагами
       this.zigzagDrawLine(
-        sideSize / 2 - this._ctx.lineWidth / 2 - 2,
-        -sideSize / 2 - this._ctx.lineWidth / 2 + 10,
-        sideSize / 2 - this._ctx.lineWidth / 2 - 2,
-        sideSize / 2 - this._ctx.lineWidth / 2 + 10);
+        sideSize / 2 - lineWidth / 2 - 2,
+        -sideSize / 2 - lineWidth / 2 + 10,
+        sideSize / 2 - lineWidth / 2 - 2,
+        sideSize / 2 - lineWidth / 2 + 10);
 
       // Отрисовка нижней стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 - this._ctx.lineWidth / 2 + 4,
-        sideSize / 2 - this._ctx.lineWidth / 2 + 4,
-        sideSize / 2 - this._ctx.lineWidth / 2 + 4,
-        sideSize / 2 - this._ctx.lineWidth / 2 + 4);
+        -sideSize / 2 - lineWidth / 2 + 4,
+        sideSize / 2 - lineWidth / 2 + 4,
+        sideSize / 2 - lineWidth / 2 + 4,
+        sideSize / 2 - lineWidth / 2 + 4);
 
       // Отрисовка левой стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 - this._ctx.lineWidth / 2 - 6,
-        -sideSize / 2 - this._ctx.lineWidth / 2 + 12,
-        -sideSize / 2 - this._ctx.lineWidth / 2 - 6,
-        sideSize / 2 - this._ctx.lineWidth / 2 + 12);
+        -sideSize / 2 - lineWidth / 2 - 6,
+        -sideSize / 2 - lineWidth / 2 + 12,
+        -sideSize / 2 - lineWidth / 2 - 6,
+        sideSize / 2 - lineWidth / 2 + 12);
 
 
       return borderElem;
@@ -190,8 +192,7 @@ module.exports = function() {
       var x;
       var y;
       if (zigzagYStart === zigzagYEnd) {
-        x = 0 + zigzagXStart;
-        y = 0 + zigzagYStart;
+        toSetStartPosition();
         while (x < zigzagXEnd + 6) {
           this.zigzagDrawHorizontal(x, y);
           x += 24;
@@ -199,12 +200,16 @@ module.exports = function() {
       }
 
       if (zigzagXStart === zigzagXEnd) {
-        x = 0 + zigzagXStart;
-        y = 0 + zigzagYStart;
+        toSetStartPosition();
         while (y < zigzagYEnd + 6) {
           this.zigzagDrawVertical(x, y);
           y += 24;
         }
+      }
+
+      function toSetStartPosition() {
+        x = 0 + zigzagXStart;
+        y = 0 + zigzagYStart;
       }
     },
 
