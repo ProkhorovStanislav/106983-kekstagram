@@ -152,32 +152,33 @@ module.exports = function() {
     // Отрисовывание рамки из зигзагов. Для отрисовки каждой стороны вызывается функция с соответствующими параметрами
     getMyCanvas: function() {
       var borderElem = document.createElement('canvas');
+      var sideSize = this._resizeConstraint.side;
       // Отрисовывка верхней стороны зигзагами
       this.zigzagDrawLine(
-        -this._resizeConstraint.side / 2 + this._ctx.lineWidth / 2,
-        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 2,
-        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2,
-        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 2);
+        -sideSize / 2 + this._ctx.lineWidth / 2,
+        -sideSize / 2 - this._ctx.lineWidth / 2 + 2,
+        sideSize / 2 - this._ctx.lineWidth / 2,
+        -sideSize / 2 - this._ctx.lineWidth / 2 + 2);
       // Отрисовка правой стороны зигзагами
       this.zigzagDrawLine(
-        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 - 2,
-        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 10,
-        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 - 2,
-        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 10);
+        sideSize / 2 - this._ctx.lineWidth / 2 - 2,
+        -sideSize / 2 - this._ctx.lineWidth / 2 + 10,
+        sideSize / 2 - this._ctx.lineWidth / 2 - 2,
+        sideSize / 2 - this._ctx.lineWidth / 2 + 10);
 
       // Отрисовка нижней стороны зигзагами
       this.zigzagDrawLine(
-        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 4,
-        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 4,
-        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 4,
-        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 4);
+        -sideSize / 2 - this._ctx.lineWidth / 2 + 4,
+        sideSize / 2 - this._ctx.lineWidth / 2 + 4,
+        sideSize / 2 - this._ctx.lineWidth / 2 + 4,
+        sideSize / 2 - this._ctx.lineWidth / 2 + 4);
 
       // Отрисовка левой стороны зигзагами
       this.zigzagDrawLine(
-        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 - 6,
-        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 12,
-        -this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 - 6,
-        this._resizeConstraint.side / 2 - this._ctx.lineWidth / 2 + 12);
+        -sideSize / 2 - this._ctx.lineWidth / 2 - 6,
+        -sideSize / 2 - this._ctx.lineWidth / 2 + 12,
+        -sideSize / 2 - this._ctx.lineWidth / 2 - 6,
+        sideSize / 2 - this._ctx.lineWidth / 2 + 12);
 
 
       return borderElem;
