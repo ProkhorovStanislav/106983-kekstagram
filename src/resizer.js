@@ -49,6 +49,8 @@ module.exports = function() {
     this._onDragStart = this._onDragStart.bind(this);
     this._onDragEnd = this._onDragEnd.bind(this);
     this._onDrag = this._onDrag.bind(this);
+    this.ZIGZAG_SIDE_RATIO = 18.75;
+
   };
 
   Resizer.prototype = {
@@ -154,34 +156,32 @@ module.exports = function() {
     getMyCanvas: function() {
       var borderElem = document.createElement('canvas');
       var sideSize = this._resizeConstraint.side;
-      var lineWidth = this._ctx.lineWidth;
       // Отрисовывка верхней стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 + lineWidth / 2,
-        -sideSize / 2 - lineWidth / 2 + 2,
-        sideSize / 2 - lineWidth / 2,
-        -sideSize / 2 - lineWidth / 2 + 2);
+        -sideSize / 2 - 8,
+        -sideSize / 2 - 2,
+        sideSize / 2 - 8,
+        -sideSize / 2 - 2);
       // Отрисовка правой стороны зигзагами
       this.zigzagDrawLine(
-        sideSize / 2 - lineWidth / 2 - 2,
-        -sideSize / 2 - lineWidth / 2 + 10,
-        sideSize / 2 - lineWidth / 2 - 2,
-        sideSize / 2 - lineWidth / 2 + 10);
+        sideSize / 2 - 4,
+        -sideSize / 2 - 4,
+        sideSize / 2 - 4,
+        sideSize / 2);
 
       // Отрисовка нижней стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 - lineWidth / 2 + 4,
-        sideSize / 2 - lineWidth / 2 + 4,
-        sideSize / 2 - lineWidth / 2 + 4,
-        sideSize / 2 - lineWidth / 2 + 4);
+        -sideSize / 2 - 10,
+        sideSize / 2 + 4,
+        sideSize / 2 - 10,
+        sideSize / 2 + 4);
 
       // Отрисовка левой стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 - lineWidth / 2 - 6,
-        -sideSize / 2 - lineWidth / 2 + 12,
-        -sideSize / 2 - lineWidth / 2 - 6,
-        sideSize / 2 - lineWidth / 2 + 12);
-
+        -sideSize / 2 - 10,
+        -sideSize / 2 - 2,
+        -sideSize / 2 - 10,
+        sideSize / 2 - 2);
 
       return borderElem;
     },
@@ -189,21 +189,22 @@ module.exports = function() {
 
     // Отрисовка линии зигзагами по горизонтали или вертикали, в зависимости от переданных координат
     zigzagDrawLine: function(zigzagXStart, zigzagYStart, zigzagXEnd, zigzagYEnd) {
+      var sideSize = this._resizeConstraint.side;
       var x;
       var y;
       if (zigzagYStart === zigzagYEnd) {
         toSetStartPosition();
-        while (x < zigzagXEnd + 6) {
+        while (x < zigzagXEnd) {
           this.zigzagDrawHorizontal(x, y);
-          x += 24;
+          x += sideSize / this.ZIGZAG_SIDE_RATIO;
         }
       }
 
       if (zigzagXStart === zigzagXEnd) {
         toSetStartPosition();
-        while (y < zigzagYEnd + 6) {
+        while (y < zigzagYEnd) {
           this.zigzagDrawVertical(x, y);
-          y += 24;
+          y += sideSize / this.ZIGZAG_SIDE_RATIO;
         }
       }
 
@@ -215,25 +216,27 @@ module.exports = function() {
 
     // Отрисовка единичного зигзага по горизонтали
     zigzagDrawHorizontal: function(zigzagXStart, zigzagYStart) {
+      var sideSize = this._resizeConstraint.side;
       this._ctx.strokeStyle = '#ffe753';
       this._ctx.lineWidth = 3;
-      this._ctx.setLineDash([15, 0]);
+      this._ctx.setLineDash([0, 0]);
       this._ctx.beginPath();
-      this._ctx.moveTo(zigzagXStart - 12, zigzagYStart );
-      this._ctx.lineTo(zigzagXStart, zigzagYStart - 12);
-      this._ctx.lineTo(zigzagXStart + 12, zigzagYStart );
+      this._ctx.moveTo(zigzagXStart, zigzagYStart );
+      this._ctx.lineTo(zigzagXStart + sideSize / this.ZIGZAG_SIDE_RATIO / 2, zigzagYStart - sideSize / this.ZIGZAG_SIDE_RATIO / 2);
+      this._ctx.lineTo(zigzagXStart + sideSize / this.ZIGZAG_SIDE_RATIO, zigzagYStart);
       this._ctx.stroke();
     },
 
     // Отрисовка единичного зигзага по вертикали
     zigzagDrawVertical: function(zigzagXStart, zigzagYStart) {
+      var sideSize = this._resizeConstraint.side;
       this._ctx.strokeStyle = '#ffe753';
       this._ctx.lineWidth = 3;
-      this._ctx.setLineDash([15, 0]);
+      this._ctx.setLineDash([0, 0]);
       this._ctx.beginPath();
-      this._ctx.moveTo(zigzagXStart - 2, zigzagYStart - 12);
-      this._ctx.lineTo(zigzagXStart + 10, zigzagYStart );
-      this._ctx.lineTo(zigzagXStart - 2, zigzagYStart + 12);
+      this._ctx.moveTo(zigzagXStart, zigzagYStart);
+      this._ctx.lineTo(zigzagXStart + sideSize / this.ZIGZAG_SIDE_RATIO / 2, zigzagYStart + sideSize / this.ZIGZAG_SIDE_RATIO / 2);
+      this._ctx.lineTo(zigzagXStart, zigzagYStart + sideSize / this.ZIGZAG_SIDE_RATIO);
       this._ctx.stroke();
     },
 
