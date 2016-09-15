@@ -158,30 +158,30 @@ module.exports = function() {
       var sideSize = this._resizeConstraint.side;
       // Отрисовывка верхней стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 - 8,
-        -sideSize / 2 - 2,
-        sideSize / 2 - 8,
-        -sideSize / 2 - 2);
+        -sideSize / 2 - this._resizeConstraint.side / 56.25,
+        -sideSize / 2 - this._resizeConstraint.side / 225,
+        sideSize / 2 - this._resizeConstraint.side / 56.25,
+        -sideSize / 2 - this._resizeConstraint.side / 225);
       // Отрисовка правой стороны зигзагами
       this.zigzagDrawLine(
-        sideSize / 2 - 4,
-        -sideSize / 2 - 4,
-        sideSize / 2 - 4,
-        sideSize / 2);
+        sideSize / 2 - this._resizeConstraint.side / 112.5,
+        -sideSize / 2 - this._resizeConstraint.side / 112.5,
+        sideSize / 2 - this._resizeConstraint.side / 112.5,
+        sideSize / 2 - this._resizeConstraint.side / 112.5);
 
       // Отрисовка нижней стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 - 10,
-        sideSize / 2 + 4,
-        sideSize / 2 - 10,
-        sideSize / 2 + 4);
+        -sideSize / 2 - this._resizeConstraint.side / 45,
+        sideSize / 2 + this._resizeConstraint.side / 112.5,
+        sideSize / 2 - this._resizeConstraint.side / 45,
+        sideSize / 2 + this._resizeConstraint.side / 112.5);
 
       // Отрисовка левой стороны зигзагами
       this.zigzagDrawLine(
-        -sideSize / 2 - 10,
-        -sideSize / 2 - 2,
-        -sideSize / 2 - 10,
-        sideSize / 2 - 2);
+        -sideSize / 2 - this._resizeConstraint.side / 45,
+        -sideSize / 2 - this._resizeConstraint.side / 225,
+        -sideSize / 2 - this._resizeConstraint.side / 45,
+        sideSize / 2 - this._resizeConstraint.side / 225);
 
       return borderElem;
     },
@@ -218,7 +218,7 @@ module.exports = function() {
     zigzagDrawHorizontal: function(zigzagXStart, zigzagYStart) {
       var sideSize = this._resizeConstraint.side;
       this._ctx.strokeStyle = '#ffe753';
-      this._ctx.lineWidth = 3;
+      this._ctx.lineWidth = this._resizeConstraint.side / 150;
       this._ctx.setLineDash([0, 0]);
       this._ctx.beginPath();
       this._ctx.moveTo(zigzagXStart, zigzagYStart );
@@ -231,7 +231,7 @@ module.exports = function() {
     zigzagDrawVertical: function(zigzagXStart, zigzagYStart) {
       var sideSize = this._resizeConstraint.side;
       this._ctx.strokeStyle = '#ffe753';
-      this._ctx.lineWidth = 3;
+      this._ctx.lineWidth = this._resizeConstraint.side / 150;
       this._ctx.setLineDash([0, 0]);
       this._ctx.beginPath();
       this._ctx.moveTo(zigzagXStart, zigzagYStart);
